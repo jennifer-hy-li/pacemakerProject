@@ -90,7 +90,7 @@ class PacemakerDatabase():
                 BEGIN\
                     IF (SELECT count(*) FROM account) >= 10\
                     THEN\
-                        RAISE EXCEPTION 'Cannot add an additional user, as 10 the user limit has been reached.';\
+                        RAISE EXCEPTION 'Cannot add an additional user, as the 10 user limit has been reached.';\
                     END IF;\
                     RETURN NEW;\
                 END;\
