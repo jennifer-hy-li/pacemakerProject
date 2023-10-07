@@ -1,6 +1,5 @@
 import psycopg2
 
-
 class PacemakerDatabase():
 
     def __init__(self, user = "postgres", password = "password", 
