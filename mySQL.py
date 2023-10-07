@@ -1,31 +1,77 @@
 import psycopg2
 
-def start_connection():
-    try:
-        connection = psycopg2.connect(user = "postgres",
+
+class PacemakerDatabase():
+    def __init__(self):
+        pass
+
+    def make_connection(self):
+        """Helper function to connect to SQL database"""
+        self.connection = psycopg2.connect(user = "postgres",
                                     password = "password",
                                     host = "localhost",
                                     port = "5432",
                                     database = "postgres")
+        self.cursor = self.connection.cursor()
 
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM account")
-        print(cursor.fetchone())
+    def close_connection(self):
+        """Helper function to close an SQL connection"""
+        if(self.connection):
+            self.cursor.close()
+            self.connection.close()
 
-    except (Exception, psycopg2.Error) as error :
-        print ("Error while connecting to PostgreSQL", error)
-    finally:
-        #closing database connection.
-        close_connection(connection, cursor)
+    def add_user(self, username: str, password: str):
+        """Register a new user to the database, given a username and password"""
+        try:
+            self.make_connection()
+            self.cursor.execute(f"INSERT INTO account VALUES ('{username}', '{password}');")
+            self.connection.commit()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
 
+    def get_user(self, username: str):
+        """Get a user, given a username"""
+        try: 
+            self.make_connection()
+            self.cursor.execute(f"SELECT  *\
+                                 FROM    account\
+                                 WHERE   username = '{username}'")
+            print(self.cursor.fetchall())
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+        
+    def get_all_users(self):
+        """Get all users from the account table"""
+        try:
+            self.make_connection()
+            self.cursor.execute("SELECT * FROM account")
+            print(self.cursor.fetchall())
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
 
-def make_new_user(username: str, password: str):
-    pass
-
-def close_connection(connection, cursor):
-    if(connection):
-        cursor.close()
-        connection.close()
-        print("PostgreSQL connection is closed")
-    
-start_connection()
+    def delete_user(self, username):
+        """Delete given user from the account table"""
+        try:
+            self.make_connection()
+            self.cursor.execute(f"DELETE FROM account\
+                                 WHERE username = '{username}';")
+            self.connection.commit()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+        
+# Test commands
+database = PacemakerDatabase()
+database.get_all_users()
+database.add_user("Jay", "jaysPassword")
+database.get_all_users()
+database.delete_user("Jay")
+database.get_all_users()
+database.get_user("user1")
