@@ -2,8 +2,8 @@ import psycopg2
 
 class PacemakerDatabase():
 
-    def __init__(self, user = "postgres", password = "password", 
-                 host = "localhost", port = "5432", database = "postgres"):
+    def __init__(self, user = "postgres", password = "theLih0me!", 
+                 host = "localhost", port = "5432", database = "pacemaker"):
         """This constructor allows you to modify the server connection details if necessary."""
         self.user = user
         self.password = password
@@ -38,13 +38,25 @@ class PacemakerDatabase():
             self.close_connection()
 
     def get_user(self, username: str):
-        """Get a user, given a username"""
+        """Get all user data, given a username"""
         try: 
             self.make_connection()
             self.cursor.execute(f"SELECT  *\
                                  FROM    account\
                                  WHERE   username = '{username}'")
             print(self.cursor.fetchall())
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+    
+    def user_exists(self, username: str):
+        """Returns whether user exists, given a username"""
+        try: 
+            self.make_connection()
+            self.cursor.execute(f"SELECT COUNT(username) FROM account WHERE username = '{username}'")
+            existance =self.cursor.fetchone()[0]
+            return existance #returns value whether user exists 1 exists, 0 doesn't exist
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
         finally:
@@ -120,19 +132,22 @@ class PacemakerDatabase():
 # Test commands
 database = PacemakerDatabase()
 database.create_account_table()
-for i in range(5):
-    database.add_user(f"user{i}", "password")
+database.delete_user("Jay")
+# for i in range(5):
+#     database.add_user(f"user{i}", "password")
 database.get_all_users()
 database.add_user("Jay", "jaysPassword")
 database.get_all_users()
-database.delete_user("Jay")
-database.get_all_users()
-database.get_user("user1")
-for i in range(5):
-    database.add_user(f"user{i+5}", "password")
-database.get_all_users()
-print("expecting 10 user limit error for next operation:")
-database.add_user("user11", "password")
-print("make sure program still works:")
-database.get_all_users()
-database.drop_account_table()
+
+# database.get_all_users()
+database.user_exists("Jay")
+
+#database.delete_user("Jay")
+# for i in range(5):
+#     database.add_user(f"user{i+5}", "password")
+# database.get_all_users()
+# print("expecting 10 user limit error for next operation:")
+# database.add_user("user11", "password")
+# print("make sure program still works:")
+# database.get_all_users()
+# database.drop_account_table()
