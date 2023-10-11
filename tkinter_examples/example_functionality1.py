@@ -20,7 +20,6 @@ class GUI:
         self.menubar.add_cascade(menu=self.filemenu, label="File")
         self.menubar.add_cascade(menu=self.actionmenu, label="Action")
 
-
         self.root.config(menu=self.menubar)
 
         self.label = tk.Label(self.root, text='Welcome to Pacemaker v0 0.1.0', font=('Arial', 18))
