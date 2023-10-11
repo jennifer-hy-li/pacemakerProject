@@ -1,4 +1,5 @@
 import tkinter as tk
+from LoginPage import Loginpage
 
 class MainWindow():
     def __init__(self, master):
@@ -52,14 +53,13 @@ class Home(tk.Frame):
 class SignIn(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        tk.Label(self, text="SignIn (TO LINK)").pack(padx=10,pady=10)
-        home = tk.Button(self, text="Home (test)",
-                                   command=lambda: (self.destroy(), Home(parent)))
-        home.pack(padx=10,pady=10)
-        sign_up_button = tk.Button(self, text="Sign Up?",
-                                   command=lambda: (self.destroy(), SignUp(parent)))
-        sign_up_button.pack(padx=10,pady=10)
-        self.pack(padx=10,pady=10)
+
+        signInWindow=tk.Frame(self, bg="white", width="500", height="500" )
+        signInWindow.pack()
+        self.pack(padx=0,pady=0)
+
+        Loginpage(self)#self passed into Loginpage as root window
+        
 
 class SignUp(tk.Frame):
     def __init__(self, parent):
