@@ -2,8 +2,8 @@ import psycopg2
 
 class PacemakerDatabase():
 
-    def __init__(self, user = "postgres", password = "theLih0me!", 
-                 host = "localhost", port = "5432", database = "pacemaker"):
+    def __init__(self, user = "postgres", password = "password", 
+                 host = "localhost", port = "5432", database = "postgres"):
         """This constructor allows you to modify the server connection details if necessary."""
         self.user = user
         self.password = password
