@@ -1,9 +1,9 @@
 from tkinter import *
 from tkinter import messagebox
-from PacemakerDatabase import passDatabase
+from PacemakerDatabase import PacemakerDatabase
 
 def registerPage(mainWindow):
-    userDatabase= passDatabase()# will be passed in from login page later
+    userDatabase= PacemakerDatabase.get_instance()# will be passed in from login page later
     userDatabase.get_all_users()
 
     #####SIGN UP LOGIC HERE, activated on 'sign up' button press
@@ -22,10 +22,14 @@ def registerPage(mainWindow):
         if (userDatabase.user_exists(username)): ##user already in data base
             messagebox.showerror("Invalid", "Username already taken.")
         elif(count2>=10):#too many users
-            messagebox.showerror("Invalid", "Sorry, we've reached our maximum capacity of 10 users.")
+            messagebox.showerror("Invalid", "Sorry, we've reached our maximum capacity of 10 users.", COMMAND=frame.quit())
+            mainWindow.destroy()
+            return
         else: #create new user in data base
             userDatabase.add_user(username, password)
-            messagebox.showerror("Registered", "You're registered! Sign in to continue.")
+            messagebox.showerror("Registered", "You're registered! Sign in to continue.", COMMAND=frame.quit())
+            mainWindow.destroy()
+            return
 
 
     frame=Frame(mainWindow, width=350, height=350, bg="white")

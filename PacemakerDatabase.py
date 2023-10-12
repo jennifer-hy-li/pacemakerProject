@@ -177,19 +177,15 @@ class PacemakerDatabase():
         finally:
             self.close_connection()
 
-database = PacemakerDatabase()
-database.create_account_table()
+# database = PacemakerDatabase()
+# database.create_account_table()
 
-#tester code for loginPage, already registered users
-database.add_user("Jay", "jaysPassword") 
-database.add_user("admin", "1234")
-database.get_all_users()
-database.get_user_count()
+# #tester code for loginPage, already registered users
+# database.add_user("Jay", "jaysPassword") 
+# database.add_user("admin", "1234")
+# database.get_all_users()
+# database.get_user_count()
 #database.drop_account_table()
-
-#pass database object to other modules
-def passDatabase():
-    return database
 
 # # Test commands
 # database = PacemakerDatabase()
