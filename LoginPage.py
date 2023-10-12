@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from PacemakerDatabase import passDatabase
+from RegisterPage import registerPage
 
 def Loginpage(my_frame):#my_frame is root
     userDatabase= passDatabase()#to be implmented
@@ -85,11 +86,15 @@ def Loginpage(my_frame):#my_frame is root
     label=Label(frame, text="Don't have an account?", fg='black', bg='white', font=('Microsoft Yahei UI Light',9))
     label.place(x=40, y=270)
 
-    sign_up=Button(frame, width=6, text="Sign up", border=0, bg='black', cursor='hand2', fg='#57a1f8')
+    def openRegister():
+        registerWindow=Toplevel(my_frame)
+        registerWindow.title("Registration")
+        registerWindow.geometry('500x500')
+        registerPage(registerWindow)
+
+    sign_up=Button(frame, width=6, text="Sign up", border=0, bg='black', cursor='hand2', fg='#57a1f8', command=lambda:openRegister())
     sign_up.place(x=200, y=270)
 
     my_frame.mainloop()
     return 
 
-root = Tk()
-Loginpage(root)

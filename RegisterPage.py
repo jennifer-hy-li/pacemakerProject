@@ -87,7 +87,3 @@ def registerPage(mainWindow):
     mainWindow.mainloop()
 
     return
-
-#test
-root = Tk()
-registerPage(root)
