@@ -39,7 +39,7 @@ class MainWindow():
         self.reports_menu.add_command(label = "Final Report", command = reports.final_report)
 
         # Initial frame
-        Home(mainframe)
+        SignIn(mainframe)
 
 class Home(tk.Frame):
     def __init__(self, parent):
