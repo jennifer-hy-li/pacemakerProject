@@ -42,7 +42,7 @@ class MainWindow():
         # Initial frame
         Home(mainframe)
 
-class Home(tk.Frame, str):
+class Home(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
 
