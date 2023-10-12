@@ -2,9 +2,30 @@ import psycopg2
 
 class PacemakerDatabase():
 
+    __instance = None
+
+    @staticmethod
+    def get_instance():
+        """Static access method"""
+        if PacemakerDatabase.__instance == None:
+            PacemakerDatabase()
+        return PacemakerDatabase.__instance
+
     def __init__(self, user = "postgres", password = "password", 
                  host = "localhost", port = "5432", database = "postgres"):
         """This constructor allows you to modify the server connection details if necessary."""
+        if PacemakerDatabase.__instance != None:
+            raise Exception("Cannot instantiate more than one instance. Use get_instance()")
+        PacemakerDatabase.__instance = self
+        self.user = user
+        self.password = password
+        self.host = host
+        self.port = port
+        self.database = database
+
+    def modify_connection_arguments(self, user = "postgres", password = "password", 
+                                    host = "localhost", port = "5432", database = "postgres"):
+        """Allows a user to modify the postgres connection arguments."""
         self.user = user
         self.password = password
         self.host = host
@@ -12,7 +33,7 @@ class PacemakerDatabase():
         self.database = database
 
     def make_connection(self):
-        """Helper function to connect to SQL database"""
+        """Helper function to connect to SQL database."""
         self.connection = psycopg2.connect(user = self.user,
                                     password = self.password,
                                     host = self.host,
@@ -21,13 +42,13 @@ class PacemakerDatabase():
         self.cursor = self.connection.cursor()
 
     def close_connection(self):
-        """Helper function to close an SQL connection"""
+        """Helper function to close an SQL connection."""
         if(self.connection):
             self.cursor.close()
             self.connection.close()
 
     def add_user(self, username: str, password: str):
-        """Register a new user to the database, given a username and password"""
+        """Register a new user to the database, given a username and password."""
         try:
             self.make_connection()
             self.cursor.execute(f"INSERT INTO account VALUES ('{username}', '{password}');")
@@ -51,6 +72,7 @@ class PacemakerDatabase():
 
     def get_user(self, username: str):
         """Get all user data, given a username"""
+
         try: 
             self.make_connection()
             self.cursor.execute(f"SELECT  *\
@@ -90,7 +112,7 @@ class PacemakerDatabase():
             self.close_connection()
         
     def get_all_users(self):
-        """Get all users from the account table"""
+        """Get all users from the account table."""
         try:
             self.make_connection()
             self.cursor.execute("SELECT * FROM account")
@@ -101,7 +123,7 @@ class PacemakerDatabase():
             self.close_connection()
 
     def delete_user(self, username):
-        """Delete given user from the account table"""
+        """Delete given user from the account table."""
         try:
             self.make_connection()
             self.cursor.execute(f"DELETE FROM account\
@@ -145,7 +167,7 @@ class PacemakerDatabase():
             self.close_connection()
 
     def drop_account_table(self):
-        """WARNING: Drops the entire account table and all data associated with it"""
+        """WARNING: Drops the entire account table and all data associated with it."""
         try:
             self.make_connection()
             self.cursor.execute(f"DROP TABLE IF EXISTS account;")
@@ -188,3 +210,4 @@ def passDatabase():
 # print("make sure program still works:")
 # database.get_all_users()
 # database.drop_account_table()
+
