@@ -22,7 +22,9 @@ def Loginpage(my_frame):#my_frame is root
                 #load new screen when login successful (TO DO, connect back to windows)
                 global windowUsername
                 windowUsername=username
-                messagebox.showerror("Sign In", "Sign In Successful!", COMMAND=frame.quit())
+                #messagebox.showerror("Sign In", "Sign In Successful!", COMMAND=frame.quit())
+                frame.quit()
+                my_frame.destroy()
                 return
             else:#wrong password, existing user
                 messagebox.showerror("Invalid", "Invalid password")
