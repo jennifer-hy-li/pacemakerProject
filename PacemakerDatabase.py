@@ -2,9 +2,29 @@ import psycopg2
 
 class PacemakerDatabase():
 
+    __instance = None
+
+    @staticmethod
+    def get_instance():
+        """Static access method"""
+        if PacemakerDatabase.__instance == None:
+            PacemakerDatabase()
+        return PacemakerDatabase.__instance
+
     def __init__(self, user = "postgres", password = "password", 
                  host = "localhost", port = "5432", database = "postgres"):
         """This constructor allows you to modify the server connection details if necessary."""
+        if PacemakerDatabase.__instance != None:
+            raise Exception("Cannot instantiate more than one instance. Use get_instance()")
+        PacemakerDatabase.__instance = self
+        self.user = user
+        self.password = password
+        self.host = host
+        self.port = port
+        self.database = database
+
+    def modify_connection_arguments(self, user = "postgres", password = "password", 
+                                    host = "localhost", port = "5432", database = "postgres"):
         self.user = user
         self.password = password
         self.host = host
@@ -117,22 +137,3 @@ class PacemakerDatabase():
             self.close_connection()
 
         
-# Test commands
-database = PacemakerDatabase()
-database.create_account_table()
-for i in range(5):
-    database.add_user(f"user{i}", "password")
-database.get_all_users()
-database.add_user("Jay", "jaysPassword")
-database.get_all_users()
-database.delete_user("Jay")
-database.get_all_users()
-database.get_user("user1")
-for i in range(5):
-    database.add_user(f"user{i+5}", "password")
-database.get_all_users()
-print("expecting 10 user limit error for next operation:")
-database.add_user("user11", "password")
-print("make sure program still works:")
-database.get_all_users()
-database.drop_account_table()
