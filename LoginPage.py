@@ -4,16 +4,20 @@ from PacemakerDatabase import passDatabase
 from RegisterPage import registerPage
 
 def Loginpage(my_frame):#my_frame is root
-    userDatabase= passDatabase()#to be implmented
-    #sign in verification, activated when sign in button pressed, to change with database
+    userDatabase= passDatabase()#database
+
+
+    ###SIGN IN LOGIC, activated when sign in button pressed
     def signin():
+        #user input
         username=user.get()
         password=code.get()
 
-        if (userDatabase.user_exists(username)):#if user exists
+        #If user exists
+        if (userDatabase.user_exists(username)):
             #check password
             if((userDatabase.get_password(username))==password):
-                #load new screen when login successful
+                #load new screen when login successful (TO DO, connect back to windows)
                 screen2=Toplevel(my_frame)
                 screen2.title("App")
                 screen2.geometry('925x500+300+200')
@@ -22,9 +26,9 @@ def Loginpage(my_frame):#my_frame is root
                 Label(screen2, text="Logged In", bg='#fff', font=('Calibri(Body)', 50, 'bold')).pack(expand=True)
 
                 screen2.mainloop()
-            else:
+            else:#wrong password, existing user
                 messagebox.showerror("Invalid", "Invalid password")
-        else:
+        else:#user doesn't exist, promp registration
             messagebox.showerror("Invalid", "Invalid username. Register using the sign up button below.")
 
 
@@ -86,6 +90,7 @@ def Loginpage(my_frame):#my_frame is root
     label=Label(frame, text="Don't have an account?", fg='black', bg='white', font=('Microsoft Yahei UI Light',9))
     label.place(x=40, y=270)
 
+    #registration window, called when sign up button pressed
     def openRegister():
         registerWindow=Toplevel(my_frame)
         registerWindow.title("Registration")

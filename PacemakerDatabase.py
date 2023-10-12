@@ -37,6 +37,18 @@ class PacemakerDatabase():
         finally:
             self.close_connection()
 
+    def user_exists(self, username: str):
+        """Returns int 1 if user exists, given a username"""
+        try: 
+            self.make_connection()
+            self.cursor.execute(f"SELECT COUNT(username) FROM account WHERE username = '{username}'")
+            existance =self.cursor.fetchone()[0]
+            return existance #1 exists, 0 doesn't exist
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+
     def get_user(self, username: str):
         """Get all user data, given a username"""
         try: 
@@ -51,7 +63,7 @@ class PacemakerDatabase():
             self.close_connection()
 
     def get_password(self, username: str):
-        """Get all user password, given a username"""
+        """Get a user password, given a username"""
         try: 
             self.make_connection()
             self.cursor.execute(f"SELECT  password\
@@ -64,26 +76,13 @@ class PacemakerDatabase():
         finally:
             self.close_connection()
     
-    def user_exists(self, username: str):
-        """Returns whether user exists, given a username"""
-        try: 
-            self.make_connection()
-            self.cursor.execute(f"SELECT COUNT(username) FROM account WHERE username = '{username}'")
-            existance =self.cursor.fetchone()[0]
-            return existance #returns value whether user exists 1 exists, 0 doesn't exist
-        except (Exception, psycopg2.Error) as error :
-            print ("PostgreSQL error:", error)
-        finally:
-            self.close_connection()
-    
     def get_user_count(self):
-        """Returns whether user exists, given a username"""
+        """Returns the number (int) of registered users in database"""
         try: 
             self.make_connection()
             self.cursor.execute(f"SELECT COUNT(username) FROM account")
             count =self.cursor.fetchone()[0]
             print(count)
-            print(type(count))
             return count #returns value whether user exists 1 exists, 0 doesn't exist
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
@@ -158,7 +157,9 @@ class PacemakerDatabase():
 
 database = PacemakerDatabase()
 database.create_account_table()
-database.add_user("Jay", "jaysPassword") #tester for login, already registered users
+
+#tester code for loginPage, already registered users
+database.add_user("Jay", "jaysPassword") 
 database.add_user("admin", "1234")
 database.get_all_users()
 database.get_user_count()
