@@ -1,30 +1,30 @@
 from tkinter import *
 from tkinter import messagebox
-import PacemakerDatabase
+from PacemakerDatabase import passDatabase
 
 def Loginpage(my_frame):#my_frame is root
-    userDatabase= PacemakerDatabase()#to be implmented
+    userDatabase= passDatabase()#to be implmented
     #sign in verification, activated when sign in button pressed, to change with database
     def signin():
         username=user.get()
         password=code.get()
 
-        if username=='admin' and password=='1234':
-            #load new screen when login successful
-            screen2=Toplevel(my_frame)
-            screen2.title("App")
-            screen2.geometry('925x500+300+200')
-            screen2.config(bg='white')
+        if (userDatabase.user_exists(username)):#if user exists
+            #check password
+            if((userDatabase.get_password(username))==password):
+                #load new screen when login successful
+                screen2=Toplevel(my_frame)
+                screen2.title("App")
+                screen2.geometry('925x500+300+200')
+                screen2.config(bg='white')
 
-            Label(screen2, text="new screen", bg='#fff', font=('Calibri(Body)', 50, 'bold')).pack(expand=True)
+                Label(screen2, text="Logged In", bg='#fff', font=('Calibri(Body)', 50, 'bold')).pack(expand=True)
 
-            screen2.mainloop()
-        elif username!= 'admin' and password !='1234':
-            messagebox.showerror("Invalid", "invalid username and password")
-        elif password!='1234':
-            messagebox.showerror("Invalid", "invalid password")
-        elif username!='admin':
-            messagebox.showerror("Invalid", "invalid username")
+                screen2.mainloop()
+            else:
+                messagebox.showerror("Invalid", "Invalid password")
+        else:
+            messagebox.showerror("Invalid", "Invalid username. Register using the sign up button below.")
 
 
     frame=Frame(my_frame, width=350, height=350, bg="white")
@@ -90,3 +90,6 @@ def Loginpage(my_frame):#my_frame is root
 
     my_frame.mainloop()
     return 
+
+root = Tk()
+Loginpage(root)
