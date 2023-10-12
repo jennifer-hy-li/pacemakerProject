@@ -1,6 +1,7 @@
 import tkinter as tk
 import UtilityFunctions as util
 import PrintedReports as reports
+from PacemakerMode import AOO,VOO,AAI,VVI
 
 class MainWindow():
     def __init__(self, master):
@@ -78,8 +79,19 @@ class Home(tk.Frame):
         
         self.pack(padx=100,pady=100)
     
-    def submit(self, option: str):
-        print(option)
+    def submit(self, selected_mode):
+        if selected_mode == "AOO":
+            AOO()
+        elif selected_mode == "VOO":
+            VOO()
+        elif selected_mode == "AAI":
+            
+            AAI()
+        elif selected_mode == "VVI":
+        
+            VVI()
+    
+    
 
 class SignIn(tk.Frame):
     def __init__(self, parent):
