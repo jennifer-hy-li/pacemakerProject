@@ -1,12 +1,12 @@
 from tkinter import *
 from tkinter import messagebox
-from PacemakerDatabase import passDatabase
+from PacemakerDatabase import PacemakerDatabase
 from RegisterPage import registerPage
 
 windowUsername ="[User]"
 
 def Loginpage(my_frame):#my_frame is root
-    userDatabase= passDatabase()#database
+    userDatabase= PacemakerDatabase.get_instance()#database
 
 
     ###SIGN IN LOGIC, activated when sign in button pressed
@@ -22,7 +22,7 @@ def Loginpage(my_frame):#my_frame is root
                 #load new screen when login successful (TO DO, connect back to windows)
                 global windowUsername
                 windowUsername=username
-                messagebox.showerror("Sign In", "Sign In Successful!", COMMAND=my_frame.quit())
+                messagebox.showerror("Sign In", "Sign In Successful!", COMMAND=frame.quit())
                 return
             else:#wrong password, existing user
                 messagebox.showerror("Invalid", "Invalid password")
