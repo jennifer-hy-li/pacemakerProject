@@ -1,5 +1,6 @@
 import tkinter as tk
 from LoginPage import Loginpage
+from LoginPage import UsernameLogin
 import UtilityFunctions as util
 import PrintedReports as reports
 
@@ -41,15 +42,19 @@ class MainWindow():
         # Initial frame
         Home(mainframe)
 
-class Home(tk.Frame):
+class Home(tk.Frame, str):
     def __init__(self, parent):
         super().__init__(parent)
 
+        #tkinter needs stringvar type for label variables
+        WelcomeMessage="Welcome "+UsernameLogin()+"!"
+        WelcomeMessageVar=tk.StringVar(self,WelcomeMessage)
+
         tk.Label(self, text = "Pacemaker v0 0.1.0", font=("Arial", 22)).grid(
             row=10, column=10, sticky=tk.W + tk.E, columnspan=10, pady=2)
-        tk.Label(self, text = "Welcome [User]", font=("Arial", 12)).grid(
+        tk.Label(self, textvariable=WelcomeMessageVar,font=("Arial", 12)).grid(
             row=20, column=10, sticky=tk.W + tk.E, columnspan=10, pady=(0,50))
-        
+
         # Device label with status
         tk.Label(self, text = "Device", font=("Arial", 16)).grid(
             row=30, column=10, padx = (0,20))
@@ -91,17 +96,19 @@ class SignIn(tk.Frame):
         self.pack(padx=0,pady=0)
 
         Loginpage(self)#self passed into Loginpage as root window
+        self.destroy()
+        Home(parent)
         
+#obsolete, signup called in LoginPage.py
+# class SignUp(tk.Frame):
+#     def __init__(self, parent):
+#         super().__init__(parent)
+#         tk.Label(self, text="SignUp").pack(padx=10,pady=10)
 
-class SignUp(tk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        tk.Label(self, text="SignUp").pack(padx=10,pady=10)
-
-        sign_in_button = tk.Button(self, text="Sign In", 
-                                     command=lambda: (self.destroy(), SignIn(parent)))
-        sign_in_button.pack(padx=10,pady=10)
-        self.pack(padx=10,pady=10)
+#         sign_in_button = tk.Button(self, text="Sign In", 
+#                                      command=lambda: (self.destroy(), SignIn(parent)))
+#         sign_in_button.pack(padx=10,pady=10)
+#         self.pack(padx=10,pady=10)
 
 
 MainWindow(tk.Tk())

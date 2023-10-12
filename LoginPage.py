@@ -3,6 +3,8 @@ from tkinter import messagebox
 from PacemakerDatabase import passDatabase
 from RegisterPage import registerPage
 
+windowUsername ="[User]"
+
 def Loginpage(my_frame):#my_frame is root
     userDatabase= passDatabase()#database
 
@@ -18,14 +20,10 @@ def Loginpage(my_frame):#my_frame is root
             #check password
             if((userDatabase.get_password(username))==password):
                 #load new screen when login successful (TO DO, connect back to windows)
-                screen2=Toplevel(my_frame)
-                screen2.title("App")
-                screen2.geometry('925x500+300+200')
-                screen2.config(bg='white')
-
-                Label(screen2, text="Logged In", bg='#fff', font=('Calibri(Body)', 50, 'bold')).pack(expand=True)
-
-                screen2.mainloop()
+                global windowUsername
+                windowUsername=username
+                messagebox.showerror("Sign In", "Sign In Successful!", COMMAND=my_frame.quit())
+                return
             else:#wrong password, existing user
                 messagebox.showerror("Invalid", "Invalid password")
         else:#user doesn't exist, promp registration
@@ -96,10 +94,14 @@ def Loginpage(my_frame):#my_frame is root
         registerWindow.title("Registration")
         registerWindow.geometry('500x500')
         registerPage(registerWindow)
+        return
 
     sign_up=Button(frame, width=6, text="Sign up", border=0, bg='black', cursor='hand2', fg='#57a1f8', command=lambda:openRegister())
     sign_up.place(x=200, y=270)
 
     my_frame.mainloop()
-    return 
+    return 0
 
+def UsernameLogin():
+
+    return windowUsername
