@@ -1,6 +1,6 @@
 import tkinter as tk
 from LoginPage import Loginpage
-from LoginPage import UsernameLogin
+from LoginPage import getUser
 import UtilityFunctions as util
 import PrintedReports as reports
 from PacemakerMode import AOO,VOO,AAI,VVI
@@ -48,7 +48,7 @@ class Home(tk.Frame):
         super().__init__(parent)
 
         #tkinter needs stringvar type for label variables
-        WelcomeMessage="Welcome "+UsernameLogin()+"!"
+        WelcomeMessage="Welcome "+ getUser()+"!"
         WelcomeMessageVar=tk.StringVar(self,WelcomeMessage)
 
         tk.Label(self, text = "Pacemaker v0 0.1.0", font=("Arial", 22)).grid(
