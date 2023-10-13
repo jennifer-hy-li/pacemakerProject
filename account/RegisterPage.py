@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-from PacemakerDatabase import PacemakerDatabase
+from database.PacemakerDatabase import PacemakerDatabase
 
 def registerPage(mainWindow):
     userDatabase= PacemakerDatabase.get_instance()# will be passed in from login page later

@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
-from PacemakerDatabase import PacemakerDatabase
-from RegisterPage import registerPage
+from database.PacemakerDatabase import PacemakerDatabase
+from account.RegisterPage import registerPage
 
 windowUsername ="[User]"
 

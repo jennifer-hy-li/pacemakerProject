@@ -1,4 +1,6 @@
 
+# Please note this file is just a placeholder 
+# for potential future requirements.
 
 def about():
     """Displays the following:
@@ -15,6 +17,7 @@ def set_clock():
 def new_patient():
     """Allows a new device to be interrogated 
     without exiting the software applcation"""
+    pass
 
 def sign_out():
     """Signs the user out and returns to the login page."""

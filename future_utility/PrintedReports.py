@@ -48,6 +48,5 @@ def final_report():
     * Implant Data
     * Net Change
     reports."""
-    
     pass
 

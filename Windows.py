@@ -1,8 +1,8 @@
 import tkinter as tk
-from LoginPage import Loginpage
-from LoginPage import getUser
-import UtilityFunctions as util
-import PrintedReports as reports
+from account.LoginPage import Loginpage
+from account.LoginPage import getUser
+import future_utility.UtilityFunctions as util
+import future_utility.PrintedReports as reports
 from PacemakerMode import AOO,VOO,AAI,VVI
 
 class MainWindow():
@@ -91,12 +91,9 @@ class Home(tk.Frame):
         elif selected_mode == "VOO":
             VOO()
         elif selected_mode == "AAI":
-            
             AAI()
         elif selected_mode == "VVI":
-        
             VVI()
-    
     
 
 class SignIn(tk.Frame):
@@ -110,18 +107,6 @@ class SignIn(tk.Frame):
         Loginpage(self)#self passed into Loginpage as root window
         self.destroy()
         Home(parent)
-        
-#obsolete, signup called in LoginPage.py
-# class SignUp(tk.Frame):
-#     def __init__(self, parent):
-#         super().__init__(parent)
-#         tk.Label(self, text="SignUp").pack(padx=10,pady=10)
-
-#         sign_in_button = tk.Button(self, text="Sign In", 
-#                                      command=lambda: (self.destroy(), SignIn(parent)))
-#         sign_in_button.pack(padx=10,pady=10)
-#         self.pack(padx=10,pady=10)
-
 
 MainWindow(tk.Tk())
 tk.mainloop()

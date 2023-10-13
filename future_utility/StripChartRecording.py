@@ -1,7 +1,6 @@
 
 # Please note this file is just a placeholder 
 # for potential future requirements.
-# This function list is currently incomplete.
 
 def display_ECG():
     """Displays real time and surface ECG data
