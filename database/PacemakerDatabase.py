@@ -177,6 +177,12 @@ class PacemakerDatabase():
         finally:
             self.close_connection()
 
+    def create_tables(self):
+        pass
+
+    def drop_all_tables(self):
+        pass
+
 # database = PacemakerDatabase()
 # database.create_account_table()
 
