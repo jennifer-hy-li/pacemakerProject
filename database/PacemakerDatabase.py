@@ -148,7 +148,6 @@ class PacemakerDatabase():
         try:
             self.make_connection()
             self.cursor.execute("SELECT * FROM account")
-            print(self.cursor.fetchall())
             return self.cursor.fetchall()
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
@@ -169,55 +168,132 @@ class PacemakerDatabase():
     # -------------------------- ACCOUNT SQL QUERIES END ------------------------- #
 
     # ------------------ ACCOUNT_PARAMETERS SQL QUERIES START -------------------- #
-    def get_all_account_parameters(user: str):
+    def get_all_account_parameters(self, username: str):
         """Get all parameters for all modes with their assigned values for this user."""
-        # TODO:
-        pass
+        try:
+            self.make_connection()
+            self.cursor.execute(f"SELECT  *\
+                                FROM    accountparameters\
+                                WHERE   user = {username};")
+            return self.cursor.fetchall()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
 
-    def get_all_parameters(user: str, mode: str):
-        """Get all parameters with their assigned values, for this user and mode."""
-        # TODO:
-        pass
+    def get_parameters(self, username: str = None, mode: str = None, parameter: str = None):
+        """Get values, optionally restrict username and mode and parameter."""
+        try:
+            self.make_connection()
+            if username != None and mode != None and parameter != None:
+                self.cursor.execute(f"SELECT  *\
+                                    FROM    accountparameters\
+                                    WHERE   username = {username} and mode = {mode} \
+                                            and parameter = {parameter};")
+            elif username != None and mode != None:
+                self.cursor.execute(f"SELECT  *\
+                                    FROM    accountparameters\
+                                    WHERE   username = {username} and mode = {mode};")
+            elif username != None and parameter != None:
+                self.cursor.execute(f"SELECT  *\
+                                    FROM    accountparameters\
+                                    WHERE   username = {username} and parameter = {parameter};")
+            elif mode != None and parameter != None:
+                self.cursor.execute(f"SELECT  *\
+                                    FROM    accountparameters\
+                                    WHERE   mode = {mode} and parameter = {parameter};")
+            elif mode != None:
+                self.cursor.execute(f"SELECT  *\
+                                    FROM    modeparameters\
+                                    WHERE   mode = \'{mode}\';")
+            elif username != None:
+                self.cursor.execute(f"SELECT  *\
+                                FROM    accountparameters\
+                                WHERE   username = {username};")
+            elif parameter != None:
+                self.cursor.execute(f"SELECT  *\
+                                FROM    accountparameters\
+                                WHERE   parameter = {parameter};")
+            elif username == None and mode == None and parameter == None:
+                self.cursor.execute(f"SELECT * FROM parameters;")
+            else:
+                raise Exception("get_parameters function is broken.")
 
-    def get_parameter_value(user: str, mode: str, parameter: str):
-        """Get a parameter's value, given a user, mode, and parameter."""
-        # TODO:
-        pass
+            return self.cursor.fetchall()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
 
-    def set_parameter_value(user: str, mode: str, parameter: str):
-        """Set a single parameter's value, for a given user, mode, and parameter."""
-        # TODO:
-        pass
+    def upsert_parameter_value(self, username: str, mode: str, parameter: str, value: float):
+        """Update or insert a single parameter's value, for a given user, mode, and parameter.
+        Note: If the primary key already exists, the value will be updated for the corresponding row.
+        Otherwise, the row will be inserted. This is known as upsert."""
+        try:
+            self.make_connection()
+            self.cursor.execute(f"INSERT INTO accountparameters\
+                                VALUES ('{username}', '{mode}', '{parameter}', {value})\
+                                ON CONFLICT (username, parameter, mode)\
+                                DO UPDATE SET value = {value};")
+            self.connection.commit()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
     # ------------------- ACCOUNT_PARAMETERS SQL QUERIES END --------------------- #
 
     # -------------------- MODE_PARAMETERS SQL QUERIES START --------------------- #
-    def get_all_parameters(mode: str):
-        """Get all parameters and values associated with the given mode."""
-        # TODO:
-        pass
+    def get_modes_from_modeparameters(self):
+        try:
+            self.make_connection()
+            self.cursor.execute(f"SELECT  *\
+                                FROM    ModeParameters")
+            return self.cursor.fetchall()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
 
-    def get_default_parameter_value(mode: str, parameter: str):
+    def get_default_parameter_value(self, mode: str, parameter: str):
         """Gets the default value assigned to one parameter from a particular mode."""
-        # TODO:
-        pass
+        try:
+            self.make_connection()
+            self.cursor.execute(f"SELECT  *\
+                                FROM    modeparameters\
+                                WHERE   mode = {mode} and parameter = {parameter};")
+            return self.cursor.fetchall()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
 
-    def set_default_parameter_value(mode: str, parameter: str, defaultValue: int):
+    def set_default_parameter_value(self, mode: str, parameter: str, defaultValue: int):
         """Assign a default value to a parameter for a given mode."""
-        # TODO:
-        pass
+        try:
+            self.make_connection()
+            self.cursor.execute(f"UPDATE  modeparameter\
+                                SET     mode = {mode},\
+                                        parameter = {parameter},\
+                                        defaultValue = {defaultValue}\
+                                WHERE   mode = {mode} and\
+                                        parameter = {parameter};")
+            self.connection.commit()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
     # -------------------- MODE_PARAMETERS SQL QUERIES END ----------------------- #
 
-    # ------------------------ PARAMETER SQL QUERIES START ----------------------- #
-    def get_all_parameters():
-        """Get all parameters in the parameters table."""
-        # TODO:
-        pass
-    # ------------------------ PARAMETER SQL QUERIES END ------------------------- #
-
     # ------------------------- MODES SQL QUERIES START -------------------------- #
-    def get_all_modes():
+    def get_all_modes(self):
         """Get all modes in the mode table."""
-        # TODO:
-        pass
+        try:
+            self.make_connection()
+            self.cursor.execute(f"SELECT * FROM mode;")
+            return self.cursor.fetchall()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
     # -------------------------- MODES SQL QUERIES END --------------------------- #
 
