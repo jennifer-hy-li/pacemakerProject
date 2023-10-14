@@ -3,10 +3,11 @@ import future_utility.UtilityFunctions as util
 import future_utility.PrintedReports as reports
 from account.LoginPage import *
 from PacemakerMode import AOO,VOO,AAI,VVI
+from database.PacemakerDatabase import *
 
 class MainWindow():
     def __init__(self, master):
-        mainframe = tk.Frame(master)
+        mainframe = tk.Frame(master, bg = "white")
         mainframe.pack(padx=10,pady=10,fill='both',expand=1)
         master.title("Pacemaker v0 0.1.0")
 
@@ -44,36 +45,39 @@ class MainWindow():
 
 class Home(tk.Frame):
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent, bg = "white")
 
         #tkinter needs stringvar type for label variables
         WelcomeMessage="Welcome "+ getUser()+"!"
         WelcomeMessageVar=tk.StringVar(self,WelcomeMessage)
 
-        tk.Label(self, text = "Pacemaker v0 0.1.0", font=("Arial", 22)).grid(
+        tk.Label(self, text = "Pacemaker v0 0.1.0", bg = "white", font=("Arial", 22)).grid(
             row=10, column=10, sticky=tk.W + tk.E, columnspan=10, pady=2)
-        tk.Label(self, textvariable=WelcomeMessageVar,font=("Arial", 12)).grid(
+        tk.Label(self, textvariable=WelcomeMessageVar, bg = "white", font=("Arial", 12)).grid(
             row=20, column=10, sticky=tk.W + tk.E, columnspan=10, pady=(0,50))
 
         # Device label with status
-        tk.Label(self, text = "Device", font=("Arial", 16)).grid(
+        tk.Label(self, text = "Device", bg = "white", font=("Arial", 16)).grid(
             row=30, column=10, padx = (0,20))
-        tk.Label(self, text = "Status + DeviceID", font=("Arial", 12)).grid(
+        tk.Label(self, text = "Status + DeviceID", bg = "white", font=("Arial", 12)).grid(
             row=40, column=10)
         
         # Mode with drop down menu, help hover, and submit button
-        tk.Label(self, text = "Mode", font = ("Arial", 16)).grid(
+        tk.Label(self, text = "Mode", bg = "white", font = ("Arial", 16)).grid(
             row=30, column=11, padx = (20,0))
         # Building the drop down menu
         modeList = tk.StringVar(self)  
         modeList.set("Please Select...")
-        optionsList = ["AOO", "VOO", "AAI", "VVI"]
+        db = PacemakerDatabase.get_instance()
+        optionsList = db.get_unique_modes_from_modeparameters()
         options = tk.OptionMenu(self, modeList, *optionsList)
         options.grid(row=40, column=11, padx = (20,0))
-        submit_button = tk.Button(self, text='Submit', 
+        options.config(bg = "white")
+        options["menu"].config(bg = "white")
+        submit_button = tk.Button(self, bg = "white", text='Submit', 
                                   command=lambda: self.submit(modeList.get()))
         submit_button.grid(row = 40, column = 12)
-        sign_in_button = tk.Button(self, text="Sign In", 
+        sign_in_button = tk.Button(self, bg = "white", text="Sign Out", 
                                    command=lambda: (self.destroy(), SignIn(parent)))
         sign_in_button.grid(row=50, column=10, columnspan=10, pady=(50,0))
 

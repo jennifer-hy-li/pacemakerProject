@@ -98,7 +98,7 @@ def Loginpage(my_frame):#my_frame is root
         registerPage(registerWindow)
         return
 
-    sign_up=Button(frame, width=6, text="Sign up", border=0, bg='black', cursor='hand2', fg='#57a1f8', command=lambda:openRegister())
+    sign_up=Button(frame, width=6, text="Sign up", border=0, bg='white', cursor='hand2', fg='#57a1f8', command=lambda:openRegister())
     sign_up.place(x=200, y=270)
 
     my_frame.mainloop()

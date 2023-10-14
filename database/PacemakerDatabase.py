@@ -269,6 +269,18 @@ class PacemakerDatabase():
         finally:
             self.close_connection()
 
+    def get_unique_modes_from_modeparameters(self):
+        """Gets all unique modes from the modeparameters table"""
+        try:
+            self.make_connection()
+            self.cursor.execute(f"SELECT DISTINCT mode\
+                                FROM    ModeParameters")
+            return self.cursor.fetchall()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+
     def get_default_parameter_value(self, mode: str, parameter: str):
         """Gets the default value assigned to one parameter from a particular mode."""
         try:
