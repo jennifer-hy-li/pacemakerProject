@@ -56,8 +56,13 @@ def database_test5():
     print("Should return empty list:", db.get_parameters(mode = 'fake'))
     db.drop_all_tables()
 
+def database_test6():
+    optionsList = db.get_unique_modes_from_modeparameters()
+    print(optionsList[0][0])
+
 # database_test1()
 # database_test2()
 # database_test3()
 # database_test4()
 # database_test5()
+database_test6()

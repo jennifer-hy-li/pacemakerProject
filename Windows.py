@@ -69,15 +69,18 @@ class Home(tk.Frame):
         modeList = tk.StringVar(self)  
         modeList.set("Please Select...")
         db = PacemakerDatabase.get_instance()
-        optionsList = db.get_unique_modes_from_modeparameters()
-        options = tk.OptionMenu(self, modeList, *optionsList)
+        unique_modes_query = db.get_unique_modes_from_modeparameters()
+        unique_modes = []
+        for mode in unique_modes_query:
+            unique_modes.append(mode[0])
+        options = tk.OptionMenu(self, modeList, *unique_modes)
         options.grid(row=40, column=11, padx = (20,0))
         options.config(bg = "white")
         options["menu"].config(bg = "white")
-        submit_button = tk.Button(self, bg = "white", text='Submit', 
+        submit_button = tk.Button(self, bg = "white", fg = "black", text='Submit', 
                                   command=lambda: self.submit(modeList.get()))
         submit_button.grid(row = 40, column = 12)
-        sign_in_button = tk.Button(self, bg = "white", text="Sign Out", 
+        sign_in_button = tk.Button(self, bg = "white", fg = "black", text="Sign Out", 
                                    command=lambda: (self.destroy(), SignIn(parent)))
         sign_in_button.grid(row=50, column=10, columnspan=10, pady=(50,0))
 
@@ -89,6 +92,7 @@ class Home(tk.Frame):
         self.pack(padx=100,pady=100)
     
     def submit(self, selected_mode):
+        print(selected_mode)
         if selected_mode == "AOO":
             AOO()
         elif selected_mode == "VOO":
