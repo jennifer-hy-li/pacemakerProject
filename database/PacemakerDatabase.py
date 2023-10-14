@@ -3,7 +3,7 @@ import psycopg2
 class PacemakerDatabase():
 
     __instance = None
-
+    
     @staticmethod
     def get_instance():
         """Static access method"""
@@ -14,15 +14,18 @@ class PacemakerDatabase():
     def __init__(self, user = "postgres", password = "password", 
                  host = "localhost", port = "5432", database = "postgres"):
         """This constructor allows you to modify the server connection details if necessary."""
+
         if PacemakerDatabase.__instance != None:
             raise Exception("Cannot instantiate more than one instance. Use get_instance()")
         PacemakerDatabase.__instance = self
+
         self.user = user
         self.password = password
         self.host = host
         self.port = port
         self.database = database
 
+    # -------------------------- CONNECTION METHODS START -------------------------- #
     def modify_connection_arguments(self, user = "postgres", password = "password", 
                                     host = "localhost", port = "5432", database = "postgres"):
         """Allows a user to modify the postgres connection arguments."""
@@ -46,7 +49,38 @@ class PacemakerDatabase():
         if(self.connection):
             self.cursor.close()
             self.connection.close()
+    # --------------------------- CONNECTION METHODS END --------------------------- #
 
+    # -------------------------- GENERAL SQL QUERIES START ------------------------- #
+    def create_and_populate(self):
+        """Create all necessary tables in the database."""
+        try:
+            self.make_connection()
+            self.cursor.execute(open("database\pacemaker_sql_files\create_tables.sql", "r").read())
+            print("Created Tables.")
+            self.cursor.execute(open("database\pacemaker_sql_files\populate_tables.sql", "r").read())
+            print("Populated Tables.")
+            self.connection.commit()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+    
+    def drop_all_tables(self):
+        """WARNING: Drops all tables in the database."""
+        try:
+            self.make_connection()
+            self.cursor.execute(
+                open("database\pacemaker_sql_files\drop_tables.sql", "r").read()
+            )    
+            self.connection.commit()      
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+    # -------------------------- GENERAL SQL QUERIES END ------------------------- #
+
+    # ------------------------- ACCOUNT SQL QUERIES START ------------------------ #
     def add_user(self, username: str, password: str):
         """Register a new user to the database, given a username and password."""
         try:
@@ -58,27 +92,26 @@ class PacemakerDatabase():
         finally:
             self.close_connection()
 
-    def user_exists(self, username: str):
-        """Returns int 1 if user exists, given a username"""
-        try: 
-            self.make_connection()
-            self.cursor.execute(f"SELECT COUNT(username) FROM account WHERE username = '{username}'")
-            existance =self.cursor.fetchone()[0]
-            return existance #1 exists, 0 doesn't exist
-        except (Exception, psycopg2.Error) as error :
-            print ("PostgreSQL error:", error)
-        finally:
-            self.close_connection()
-
     def get_user(self, username: str):
         """Get all user data, given a username"""
-
         try: 
             self.make_connection()
             self.cursor.execute(f"SELECT  *\
                                  FROM    account\
                                  WHERE   username = '{username}'")
-            print(self.cursor.fetchall())
+            return self.cursor.fetchall()
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+
+    def user_exists(self, username: str):
+        """Returns int 1 if user exists, given a username"""
+        try: 
+            self.make_connection()
+            self.cursor.execute(f"SELECT COUNT(username) FROM account WHERE username = '{username}'")
+            existance = self.cursor.fetchone()[0]
+            return existance #1 exists, 0 doesn't exist
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
         finally:
@@ -91,8 +124,7 @@ class PacemakerDatabase():
             self.cursor.execute(f"SELECT  password\
                                  FROM    account\
                                  WHERE   username = '{username}'")
-            returnPassword=self.cursor.fetchone()[0]
-            return returnPassword
+            return self.cursor.fetchone()[0]
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
         finally:
@@ -103,9 +135,9 @@ class PacemakerDatabase():
         try: 
             self.make_connection()
             self.cursor.execute(f"SELECT COUNT(username) FROM account")
-            count =self.cursor.fetchone()[0]
+            count = self.cursor.fetchone()[0]
             print(count)
-            return count #returns value whether user exists 1 exists, 0 doesn't exist
+            return count # returns value whether user exists 1 exists, 0 doesn't exist
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
         finally:
@@ -117,6 +149,7 @@ class PacemakerDatabase():
             self.make_connection()
             self.cursor.execute("SELECT * FROM account")
             print(self.cursor.fetchall())
+            return self.cursor.fetchall()
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
         finally:
@@ -133,83 +166,58 @@ class PacemakerDatabase():
             print ("PostgreSQL error:", error)
         finally:
             self.close_connection()
+    # -------------------------- ACCOUNT SQL QUERIES END ------------------------- #
 
-    def create_account_table(self):
-        """Creates the account table with a trigger to limit the rows to 10."""
-        try:
-            self.make_connection()
-            self.cursor.execute(
-                f"CREATE TABLE IF NOT EXISTS account (\
-                username VARCHAR (50) UNIQUE NOT NULL,\
-                password VARCHAR (50) NOT NULL CONSTRAINT \"Password length must be between 3 and 50\"\
-                CHECK(length(password) >= 3 AND length(password) <= 50));\
-                \
-                CREATE OR REPLACE FUNCTION check_number_of_rows()\
-                RETURNS TRIGGER AS\
-                $body$\
-                BEGIN\
-                    IF (SELECT count(*) FROM account) >= 10\
-                    THEN\
-                        RAISE EXCEPTION 'Cannot add an additional user, as the 10 user limit has been reached.';\
-                    END IF;\
-                    RETURN NEW;\
-                END;\
-                $body$\
-                LANGUAGE plpgsql;\
-                \
-                CREATE OR REPLACE TRIGGER tr_check_number_of_rows\
-                BEFORE INSERT ON account\
-                FOR EACH ROW EXECUTE PROCEDURE check_number_of_rows();")
-            self.connection.commit()
-        except (Exception, psycopg2.Error) as error :
-            print ("PostgreSQL error:", error)
-        finally:
-            self.close_connection()
-
-    def drop_account_table(self):
-        """WARNING: Drops the entire account table and all data associated with it."""
-        try:
-            self.make_connection()
-            self.cursor.execute(f"DROP TABLE IF EXISTS account;")
-            self.connection.commit()
-        except (Exception, psycopg2.Error) as error :
-            print ("PostgreSQL error:", error)
-        finally:
-            self.close_connection()
-
-    def create_tables(self):
+    # ------------------ ACCOUNT_PARAMETERS SQL QUERIES START -------------------- #
+    def get_all_account_parameters(user: str):
+        """Get all parameters for all modes with their assigned values for this user."""
+        # TODO:
         pass
 
-    def drop_all_tables(self):
+    def get_all_parameters(user: str, mode: str):
+        """Get all parameters with their assigned values, for this user and mode."""
+        # TODO:
         pass
 
-# database = PacemakerDatabase()
-# database.create_account_table()
+    def get_parameter_value(user: str, mode: str, parameter: str):
+        """Get a parameter's value, given a user, mode, and parameter."""
+        # TODO:
+        pass
 
-# #tester code for loginPage, already registered users
-# database.add_user("Jay", "jaysPassword") 
-# database.add_user("admin", "1234")
-# database.get_all_users()
-# database.get_user_count()
-#database.drop_account_table()
+    def set_parameter_value(user: str, mode: str, parameter: str):
+        """Set a single parameter's value, for a given user, mode, and parameter."""
+        # TODO:
+        pass
+    # ------------------- ACCOUNT_PARAMETERS SQL QUERIES END --------------------- #
 
-# # Test commands
-# database = PacemakerDatabase()
-# database.create_account_table()
-# for i in range(5):
-#     database.add_user(f"user{i}", "password")
-# database.get_all_users()
-# database.add_user("Jay", "jaysPassword")
-# database.get_all_users()
-# database.delete_user("Jay")
-# database.get_all_users()
-# database.get_user("user1")
-# for i in range(5):
-#     database.add_user(f"user{i+5}", "password")
-# database.get_all_users()
-# print("expecting 10 user limit error for next operation:")
-# database.add_user("user11", "password")
-# print("make sure program still works:")
-# database.get_all_users()
-# database.drop_account_table()
+    # -------------------- MODE_PARAMETERS SQL QUERIES START --------------------- #
+    def get_all_parameters(mode: str):
+        """Get all parameters and values associated with the given mode."""
+        # TODO:
+        pass
+
+    def get_default_parameter_value(mode: str, parameter: str):
+        """Gets the default value assigned to one parameter from a particular mode."""
+        # TODO:
+        pass
+
+    def set_default_parameter_value(mode: str, parameter: str, defaultValue: int):
+        """Assign a default value to a parameter for a given mode."""
+        # TODO:
+        pass
+    # -------------------- MODE_PARAMETERS SQL QUERIES END ----------------------- #
+
+    # ------------------------ PARAMETER SQL QUERIES START ----------------------- #
+    def get_all_parameters():
+        """Get all parameters in the parameters table."""
+        # TODO:
+        pass
+    # ------------------------ PARAMETER SQL QUERIES END ------------------------- #
+
+    # ------------------------- MODES SQL QUERIES START -------------------------- #
+    def get_all_modes():
+        """Get all modes in the mode table."""
+        # TODO:
+        pass
+    # -------------------------- MODES SQL QUERIES END --------------------------- #
 

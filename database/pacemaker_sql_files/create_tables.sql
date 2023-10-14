@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS Mode (
 );
 
 -- ORDER 1 TABLES --
-CREATE TABLE IF NOT EXISTS ModelParameters(
+CREATE TABLE IF NOT EXISTS ModeParameters(
     mode            VARCHAR(50),
     parameters      VARCHAR(50),
-    initialValue    int4,
+    initialValue    float8,
     PRIMARY KEY (mode, parameters),
     -- safety critical systems should be very strict when deleting or updating modes and parameters.
     FOREIGN KEY (parameters) references Parameters ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -29,9 +29,10 @@ CREATE TABLE IF NOT EXISTS AccountParameters(
     username    VARCHAR(50),
     parameters  VARCHAR(50),
     mode        VARCHAR(50),
+    value       float8,
     PRIMARY KEY (username, parameters, mode),
     FOREIGN KEY (username)         references Account         ON DELETE RESTRICT ON UPDATE RESTRICT,
-    FOREIGN KEY (parameters, mode) references ModelParameters ON DELETE RESTRICT ON UPDATE RESTRICT
+    FOREIGN KEY (parameters, mode) references ModeParameters ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 -- Function and Trigger for Account table, limit rows --

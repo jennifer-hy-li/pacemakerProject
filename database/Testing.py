@@ -7,7 +7,7 @@ db = database.PacemakerDatabase.get_instance()
 def database_test1():
     # Test commands
     print("Test 1")
-    db.create_account_table()
+    db.create_and_populate()
     for i in range(5):
         db.add_user(f"user{i}", "password")
     db.get_all_users()
@@ -23,6 +23,6 @@ def database_test1():
     db.add_user("user11", "password")
     print("make sure program still works:")
     db.get_all_users()
-    db.drop_account_table()
+    db.drop_all_tables()
     
 database_test1()
