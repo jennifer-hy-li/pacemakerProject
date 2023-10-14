@@ -8,7 +8,7 @@ from database.PacemakerDatabase import *
 class MainWindow():
     def __init__(self, master):
         mainframe = tk.Frame(master, bg = "white")
-        mainframe.pack(padx=10,pady=10,fill='both',expand=1)
+        mainframe.pack(fill='both', expand=1)
         master.title("Pacemaker v0 0.1.0")
 
         # add menubar
@@ -16,18 +16,18 @@ class MainWindow():
         master.config(menu=self.menubar)
 
         # add File to menubar
-        self.file_menu = tk.Menu(self.menubar, tearoff = 0)
+        self.file_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
         self.menubar.add_cascade(menu = self.file_menu, label = "File")
         self.file_menu.add_command(label = "Sign Out", command = util.sign_out)
         self.file_menu.add_command(label = "Quit", command = exit)
 
         # add Settings to menubar
-        self.settings_menu = tk.Menu(self.menubar, tearoff = 0)
+        self.settings_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
         self.menubar.add_cascade(menu = self.settings_menu, label = "Settings")
         self.settings_menu.add_command(label = "Set Clock", command = util.set_clock)
 
         # add Reports to menubar
-        self.reports_menu = tk.Menu(self.menubar, tearoff = 0)
+        self.reports_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
         self.menubar.add_cascade(menu = self.reports_menu, label = "Reports")
         self.reports_menu.add_command(label = "Bradycardia Parameters", command = reports.bradycardia_parameters_report)
         self.reports_menu.add_command(label = "Temporary Parameters", command = reports.temporary_parameters_report)
@@ -92,7 +92,6 @@ class Home(tk.Frame):
         self.pack(padx=100,pady=100)
     
     def submit(self, selected_mode):
-        print(selected_mode)
         if selected_mode == "AOO":
             AOO()
         elif selected_mode == "VOO":
