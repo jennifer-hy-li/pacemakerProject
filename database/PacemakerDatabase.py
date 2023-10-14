@@ -258,6 +258,7 @@ class PacemakerDatabase():
 
     # -------------------- MODE_PARAMETERS SQL QUERIES START --------------------- #
     def get_modes_from_modeparameters(self):
+        """Gets all modes and parameters from the modeparameters table"""
         try:
             self.make_connection()
             self.cursor.execute(f"SELECT  *\
