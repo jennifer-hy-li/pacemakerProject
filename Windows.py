@@ -1,8 +1,7 @@
 import tkinter as tk
-from account.LoginPage import Loginpage
-from account.LoginPage import getUser
 import future_utility.UtilityFunctions as util
 import future_utility.PrintedReports as reports
+from account.LoginPage import *
 from PacemakerMode import AOO,VOO,AAI,VVI
 
 class MainWindow():
@@ -108,5 +107,4 @@ class SignIn(tk.Frame):
         self.destroy()
         Home(parent)
 
-MainWindow(tk.Tk())
-tk.mainloop()
+

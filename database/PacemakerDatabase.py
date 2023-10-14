@@ -52,6 +52,20 @@ class PacemakerDatabase():
     # --------------------------- CONNECTION METHODS END --------------------------- #
 
     # -------------------------- GENERAL SQL QUERIES START ------------------------- #
+    def table_exists(self, table: str):
+        try:
+            self.make_connection()
+            self.cursor.execute(f"SELECT exists(\
+                                    SELECT  *\
+                                    FROM    information_schema.tables\
+                                    WHERE   table_name = '{table}'\
+                                )")
+            return self.cursor.fetchone()[0]
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+    
     def create_and_populate(self):
         """Create all necessary tables in the database."""
         try:
@@ -174,7 +188,7 @@ class PacemakerDatabase():
             self.make_connection()
             self.cursor.execute(f"SELECT  *\
                                 FROM    accountparameters\
-                                WHERE   user = {username};")
+                                WHERE   user = '{username}';")
             return self.cursor.fetchall()
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
@@ -188,32 +202,32 @@ class PacemakerDatabase():
             if username != None and mode != None and parameter != None:
                 self.cursor.execute(f"SELECT  *\
                                     FROM    accountparameters\
-                                    WHERE   username = {username} and mode = {mode} \
-                                            and parameter = {parameter};")
+                                    WHERE   username = '{username}' and mode = '{mode}' \
+                                            and parameter = '{parameter}';")
             elif username != None and mode != None:
                 self.cursor.execute(f"SELECT  *\
                                     FROM    accountparameters\
-                                    WHERE   username = {username} and mode = {mode};")
+                                    WHERE   username = '{username}' and mode = '{mode}';")
             elif username != None and parameter != None:
                 self.cursor.execute(f"SELECT  *\
                                     FROM    accountparameters\
-                                    WHERE   username = {username} and parameter = {parameter};")
+                                    WHERE   username = '{username}' and parameter = '{parameter}';")
             elif mode != None and parameter != None:
                 self.cursor.execute(f"SELECT  *\
                                     FROM    accountparameters\
-                                    WHERE   mode = {mode} and parameter = {parameter};")
+                                    WHERE   mode = '{mode}' and parameter = '{parameter}';")
             elif mode != None:
                 self.cursor.execute(f"SELECT  *\
                                     FROM    modeparameters\
-                                    WHERE   mode = \'{mode}\';")
+                                    WHERE   mode = '{mode}';")
             elif username != None:
                 self.cursor.execute(f"SELECT  *\
                                 FROM    accountparameters\
-                                WHERE   username = {username};")
+                                WHERE   username = '{username}';")
             elif parameter != None:
                 self.cursor.execute(f"SELECT  *\
                                 FROM    accountparameters\
-                                WHERE   parameter = {parameter};")
+                                WHERE   parameter = '{parameter}';")
             elif username == None and mode == None and parameter == None:
                 self.cursor.execute(f"SELECT * FROM parameters;")
             else:
@@ -232,9 +246,9 @@ class PacemakerDatabase():
         try:
             self.make_connection()
             self.cursor.execute(f"INSERT INTO accountparameters\
-                                VALUES ('{username}', '{mode}', '{parameter}', {value})\
+                                VALUES ('{username}', '{mode}', '{parameter}', '{value}')\
                                 ON CONFLICT (username, parameter, mode)\
-                                DO UPDATE SET value = {value};")
+                                DO UPDATE SET value = '{value}';")
             self.connection.commit()
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
@@ -260,7 +274,7 @@ class PacemakerDatabase():
             self.make_connection()
             self.cursor.execute(f"SELECT  *\
                                 FROM    modeparameters\
-                                WHERE   mode = {mode} and parameter = {parameter};")
+                                WHERE   mode = '{mode}' and parameter = '{parameter}';")
             return self.cursor.fetchall()
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
@@ -272,11 +286,11 @@ class PacemakerDatabase():
         try:
             self.make_connection()
             self.cursor.execute(f"UPDATE  modeparameter\
-                                SET     mode = {mode},\
-                                        parameter = {parameter},\
-                                        defaultValue = {defaultValue}\
-                                WHERE   mode = {mode} and\
-                                        parameter = {parameter};")
+                                SET     mode = '{mode}',\
+                                        parameter = '{parameter}',\
+                                        defaultValue = '{defaultValue}'\
+                                WHERE   mode = '{mode}' and\
+                                        parameter = '{parameter}';")
             self.connection.commit()
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
