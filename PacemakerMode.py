@@ -1,151 +1,189 @@
 import tkinter as tk
 
-class AOO:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("AOO Mode")
-        self.root.geometry("600x400")
-        tk.Label(self.root, text="Mode: AOO", font = ('Arial',20)).grid(row = 1, column=0, padx=(50,0))
-        tk.Label(self.root, text="Atrium Paced | No chamber sensed | No response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(50,0),pady=(0,10))
-
-        canvas = tk.Canvas(self.root,width=490, height=20)
-        canvas.grid(row =0,column =0, padx=(100,0))
-
-        #device communication status indicator
-        canvas.create_oval((470,3,490,20) ,fill="blue")
-        #new device approaching status indicator
-        canvas.create_oval((440,3,460,20) ,fill="red")
-
-        tk.Label(self.root, text="Parameters", font = ('Arial',15),fg="blue").grid(row = 4, column=0, padx=(0,450))
-        tk.Label(self.root, text="• Lower rate limit",font = ('Arial',12)).grid(row = 5, column=0, padx=(0,450))
-        tk.Label(self.root, text="• Upper rate limit",font = ('Arial',12)).grid(row = 6, column=0, padx=(0,450))
-        tk.Label(self.root, text="• Atrial amplitude",font = ('Arial',12)).grid(row = 7, column=0, padx=(0,447))
-        tk.Label(self.root, text="• Atrial pulse width",font = ('Arial',12)).grid(row = 8, column=0, padx=(0,443))
-
-        tk.Label(self.root, text="Device:",font = ('Arial',10)).grid(row = 30, column=0, padx=(0,550),pady=(140,0))
-        tk.Label(self.root, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
+class ParameterProcess:
+    def process_parameter(parameter_name, value_var):
+        # Retrieve the input value for the specified parameter
+        value = value_var.get()
+        # Process the value (replace this with your processing logic)
+        print(f"Processing {parameter_name}: {value}")
 
 
-
-    def run(self):
-        self.root.mainloop()
-    
-    def close(self):
-        self.root.destroy()
-
-class VOO:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("VOO Mode")
-        self.root.geometry("600x400")
-        tk.Label(self.root, text="MODE: VOO", font = ('Arial',20)).grid(row = 1, column=0, padx=(70,0))
-        tk.Label(self.root, text="Ventrical Paced | No chamber sensed | No response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(70,0),pady=(0,10))
+class AOO(ParameterProcess,tk.Frame):
+    def __init__(self,parent):
+        lowerRateLimit_AOO = tk.StringVar()
+        upperRateLimit_AOO = tk.StringVar()
+        atrialAmplitude_AOO = tk.StringVar()
+        atrialPulse_Width_AOO = tk.StringVar()
+        super().__init__(parent)
         
-        canvas = tk.Canvas(self.root,width=490, height=20)
-        canvas.grid(row =0,column =0, padx=(100,0))
+        tk.Label(self, text="Mode: AOO", font = ('Arial',23)).grid(row = 1, column=0, padx=(50,0))
+        tk.Label(self, text="Atrium Paced | No chamber sensed | No response to sensing ", font = ('Arial',12)).grid(row=2,column=0,padx=(50,0),pady=(0,10))
+        
+        # Create Entry widgets for parameters
+        self.param_entries = {}
+        self.parameter_values = {}
+        
+        parameters = [
+            ("Lower rate limit", lowerRateLimit_AOO),
+            ("Upper rate limit",upperRateLimit_AOO),
+            ("Atrial amplitude",atrialAmplitude_AOO),
+            ("Atrial pulse width",atrialPulse_Width_AOO)
+        ]
 
-        #device communication status indicator
-        canvas.create_oval((470,3,490,20) ,fill="blue")
-        #new device approaching status indicator
-        canvas.create_oval((440,3,460,20) ,fill="red")
+        row = 5  # Starting row for parameters
+        for param, value_var in parameters:
+            label = tk.Label(self, text=f" {param}", font=('Arial', 12))
+            label.grid(row=row, column=0, sticky="w", padx=(0, 0))
+            entry = tk.Entry(self, textvariable=value_var)
+            entry.grid(row=row, column=0, padx=(50, 0))  # Use padx to adjust the spacing
+            self.param_entries[param] = entry
 
-        tk.Label(self.root, text="Parameters", font = ('Arial',15),fg="blue").grid(row = 4, column=0, padx=(0,450))
-        tk.Label(self.root, text="• Lower rate limit",font = ('Arial',12)).grid(row = 5, column=0, padx=(0,440))
-        tk.Label(self.root, text="• Upper rate limit",font = ('Arial',12)).grid(row = 6, column=0, padx=(0,440))
-        tk.Label(self.root, text="• Ventricular amplitude",font = ('Arial',12)).grid(row = 7, column=0, padx=(0,400))
-        tk.Label(self.root, text="• Ventricular pulse width",font = ('Arial',12)).grid(row = 8, column=0, padx=(0,390))
+            # Add a button for each parameter
+            process_button = tk.Button(self, text=f"Process", command=lambda p=param, v=value_var: ParameterProcess.process_parameter(p, v))
+            process_button.grid(row=row, column=0,padx=(300, 50))  # Place the button in a separate column
+            row += 1
+        
+        tk.Label(self, text="Device:", font=('Arial', 10)).grid(row=30, column=0, padx=(0, 550), pady=(140, 0))
+        tk.Label(self, text="[Show status + Device ID]", font=('Arial', 9)).grid(row=31, column=0, padx=(0, 450), pady=(0, 0))
 
-        tk.Label(self.root, text="Device:",font = ('Arial',10)).grid(row = 30, column=0, padx=(0,550),pady=(140,0))
-        tk.Label(self.root, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
+        self.pack()
+        
+class VOO(tk.Frame):
+    def __init__(self,parent):
+        lowerRateLimit_VOO = tk.StringVar()
+        upperRateLimit_VOO = tk.StringVar()
+        ventricularAmplitude_VOO = tk.StringVar()
+        VentricularPulseWidth_VOO = tk.StringVar()
+
+        super().__init__(parent)
+        tk.Label(self, text="MODE: VOO", font = ('Arial',20)).grid(row = 1, column=0, padx=(70,0))
+        tk.Label(self, text="Ventrical Paced | No chamber sensed | No response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(70,0),pady=(0,10))
+        
+        # Create Entry widgets for parameters
+        self.param_entries = {}
+        self.parameter_values = {}
+        parameters = [
+            ("Lower rate limit", lowerRateLimit_VOO),
+            ("Upper rate limit",upperRateLimit_VOO),
+            ("Ventricular amplitude",ventricularAmplitude_VOO),
+            ("Ventricular pulse width",VentricularPulseWidth_VOO)
+        ]
+        
+        row = 5  # Starting row for parameters
+        for param, value_var in parameters:
+            label = tk.Label(self, text=f" {param}", font=('Arial', 12))
+            label.grid(row=row, column=0, sticky="w", padx=(0, 0))
+            entry = tk.Entry(self, textvariable=value_var)
+            entry.grid(row=row, column=0, padx=(50, 0) )  # Use padx to adjust the spacing
+            self.param_entries[param] = entry
+
+            # Add a button for each parameter
+            process_button = tk.Button(self, text=f"Process", command=lambda p=param, v=value_var: ParameterProcess.process_parameter(p, v))
+            process_button.grid(row=row, column=0, padx=(300, 50))
+            row += 1
+
+        tk.Label(self, text="Device:",font = ('Arial',10)).grid(row = 30, column=0, padx=(0,550),pady=(140,0))
+        tk.Label(self, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
         
 
+        self.pack()
 
 
-    def run(self):
-        self.root.mainloop()
-    
-    def close(self):
-        self.root.destroy()
-    
-
-
-class AAI:
-    def __init__(self):
-        self.root = tk.Tk()
+class AAI (tk.Frame):
+    def __init__(self,parent):
+        lowerRateLimit_AAI = tk.StringVar()
+        upperRateLimit_AAI = tk.StringVar()
+        atrialAmplitude_AAI = tk.StringVar()
+        atrialPulse_Width_AAI = tk.StringVar()
+        atrialSensitivity_AAI = tk.StringVar()
+        arp_AAI = tk.StringVar()
+        pvarp_AAI = tk.StringVar()
+        hystersis_AAI = tk.StringVar()
+        rateSmoothing_AAI = tk.StringVar()
         
-
-        self.root.title("AAI Mode")
-        self.root.geometry("600x400")
-        tk.Label(self.root, text="Mode: AAI", font = ('Arial',20)).grid(row = 1, column=0, padx=(70,0))
-        tk.Label(self.root, text="Atrium Paced | Atrium chamber sensed | Inhibited response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(70,0), pady=(0,10))
+        super().__init__(parent)
+        tk.Label(self, text="Mode: AAI", font = ('Arial',20)).grid(row = 1, column=0, padx=(70,0))
+        tk.Label(self, text="Atrium Paced | Atrium chamber sensed | Inhibited response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(70,0), pady=(0,10))
         
-        canvas = tk.Canvas(self.root,width=490, height=20)
-        canvas.grid(row =0,column =0, padx=(100,0))
-
-        #device communication status indicator
-        canvas.create_oval((470,3,490,20) ,fill="blue")
-        #new device approaching status indicator
-        canvas.create_oval((440,3,460,20) ,fill="red")
-
-        tk.Label(self.root, text="Parameters", font = ('Arial',15),fg="blue").grid(row = 3, column=0, padx =(0,450))
-        tk.Label(self.root, text="• Lower rate limit",font = ('Arial',12)).grid(row = 4, column=0, padx=(0,440))
-        tk.Label(self.root, text="• Upper rate limit",font = ('Arial',12)).grid(row = 5, column=0, padx=(0,440))
-        tk.Label(self.root, text="• Atrial amplitude",font = ('Arial',12)).grid(row = 6, column=0, padx=(0,438))
-        tk.Label(self.root, text="• Atrial pulse width",font = ('Arial',12)).grid(row = 7, column=0, padx=(0,430))
-        tk.Label(self.root, text="• Atrial sensitivity",font = ('Arial',12)).grid(row = 8, column=0, padx=(0,440))
-        tk.Label(self.root, text="• ARP",font = ('Arial',12)).grid(row = 9, column=0, padx=(0,515))
-        tk.Label(self.root, text="• PVARP",font = ('Arial',12)).grid(row = 10, column=0, padx=(0,495))
-        tk.Label(self.root, text="• Hystersis",font = ('Arial',12)).grid(row = 11, column=0, padx=(0,485))
-        tk.Label(self.root, text="• Rate Smoothing",font = ('Arial',12)).grid(row = 12, column=0, padx=(0,440))
-
-        tk.Label(self.root, text="Device:",font = ('Arial',10)).grid(row = 30, column=0, padx=(0,550),pady=(20,0))
-        tk.Label(self.root, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
+        # Create Entry widgets for parameters
+        self.param_entries = {}
+        self.parameter_values = {}
+        parameters = [
+            ("Lower rate limit", lowerRateLimit_AAI),
+            ("Upper rate limit",upperRateLimit_AAI),
+            ("Atrial amplitude",atrialAmplitude_AAI),
+            ("Atrial pulse width",atrialPulse_Width_AAI),
+            ("Atrial sensitivity",atrialSensitivity_AAI),
+            ("ARP",arp_AAI),
+            ("PVARP",pvarp_AAI),
+            ("Hystersis",hystersis_AAI),
+            ("Rate Smoothing",rateSmoothing_AAI)
         
-    def run(self):
-        self.root.mainloop()
-    
-    def close(self):
-        self.root.destroy()
+        ]
+        row = 5  # Starting row for parameters
+        for param, value_var in parameters:
+            label = tk.Label(self, text=f" {param}", font=('Arial', 12))
+            label.grid(row=row, column=0, sticky="w", padx=(0, 0))
+            entry = tk.Entry(self, textvariable=value_var)
+            entry.grid(row=row, column=0, padx=(50, 0) )  # Use padx to adjust the spacing
+            self.param_entries[param] = entry
 
-class VVI:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("VVI Mode")
-        self.root.geometry("600x400")
-        tk.Label(self.root, text="Mode: VVI", font = ('Arial',20)).grid(row = 1, column=0, padx=(50,0))
-        tk.Label(self.root, text="Ventricle Paced | Ventricle chambers sensed | Inhibited response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(0,0),pady=(0,10))
-
-        canvas = tk.Canvas(self.root,width=490, height=20)
-        canvas.grid(row =0,column =0, padx=(95,0))
-
-        #device communication status indicator
-        canvas.create_oval((470,3,490,20) ,fill="blue")
-        #new device approaching status indicator
-        canvas.create_oval((440,3,460,20) ,fill="red")
+            # Add a button for each parameter
+            process_button = tk.Button(self, text=f"Process", command=lambda p=param, v=value_var: ParameterProcess.process_parameter(p, v))
+            process_button.grid(row=row, column=0, padx=(300, 50))
+            row += 1
+       
+        tk.Label(self, text="Device:",font = ('Arial',10)).grid(row = 30, column=0, padx=(0,550),pady=(20,0))
+        tk.Label(self, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
         
-        tk.Label(self.root, text="Parameters", font = ('Arial',15),fg="blue").grid(row = 3, column=0, padx=(0,450))
-        tk.Label(self.root, text="• Lower rate limit",font = ('Arial',12)).grid(row = 4, column=0, padx=(0,450))
-        tk.Label(self.root, text="• Upper rate limit",font = ('Arial',12)).grid(row = 5, column=0, padx=(0,450))
-        tk.Label(self.root, text="• Ventricular amplitude",font = ('Arial',12)).grid(row = 6, column=0, padx=(0,410))
-        tk.Label(self.root, text="• Ventrivular pulse width",font = ('Arial',12)).grid(row = 7, column=0, padx=(0,400))
-        tk.Label(self.root, text="• Ventricular sensitivity",font = ('Arial',12)).grid(row = 8, column=0, padx=(0,410))
-        tk.Label(self.root, text="• VRP",font = ('Arial',12)).grid(row = 9, column=0,padx=(0,521))
-        tk.Label(self.root, text="• Hystersis",font = ('Arial',12)).grid(row = 10, column=0, padx=(0,491))
-        tk.Label(self.root, text="• Rate Smoothing",font = ('Arial',12)).grid(row = 11, column=0, padx=(0,441))
+        self.pack()
 
-        tk.Label(self.root, text="Device:",font = ('Arial',10)).grid(row = 30, column=0, padx=(0,550),pady=(35,0))
-        tk.Label(self.root, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
+class VVI(tk.Frame):
+    def __init__(self,parent):
+        lowerRateLimit_VVI = tk.StringVar()
+        upperRateLimit_VVI = tk.StringVar()
+        ventricularAmplitude_VVI = tk.StringVar()
+        ventricularPulse_Width_VVI = tk.StringVar()
+        ventricularSensitivity_VVI = tk.StringVar()
+        vrp_VVI = tk.StringVar()
+        hystersis_VVI = tk.StringVar()
+        rateSmoothing_VVI = tk.StringVar()
 
+        super().__init__(parent)
+        tk.Label(self, text="Mode: VVI", font = ('Arial',20)).grid(row = 1, column=0, padx=(50,0))
+        tk.Label(self, text="Ventricle Paced | Ventricle chambers sensed | Inhibited response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(0,0),pady=(0,10))
 
-    def run(self):
-        self.root.mainloop()
-    
-    def close(self):
-        self.root.destroy()
+        # Create Entry widgets for parameters
+        self.param_entries = {}
+        self.parameter_values = {}
+        parameters = [
+            ("Lower rate limit", lowerRateLimit_VVI),
+            ("Upper rate limit",upperRateLimit_VVI),
+            ("Ventricular amplitude",ventricularAmplitude_VVI),
+            ("Ventricular pulse width",ventricularPulse_Width_VVI),
+            ("Ventricular sensitivity",ventricularSensitivity_VVI),
+            ("VRP",vrp_VVI),
+            ("Hystersis",hystersis_VVI),
+            ("Rate Smoothing",rateSmoothing_VVI)
         
-if __name__ == "__main__":
-    aoo_app =VVI()
-    #VOO done
-    aoo_app.run()
-        
+        ]
+        row = 5  # Starting row for parameters
+        for param, value_var in parameters:
+            label = tk.Label(self, text=f" {param}", font=('Arial', 12))
+            label.grid(row=row, column=0, sticky="w", padx=(0, 0))
+            entry = tk.Entry(self, textvariable=value_var)
+            entry.grid(row=row, column=0, padx=(50, 0) )  # Use padx to adjust the spacing
+            self.param_entries[param] = entry
+
+            # Add a button for each parameter
+            process_button = tk.Button(self, text=f"Process", command=lambda p=param, v=value_var: ParameterProcess.process_parameter(p, v))
+            process_button.grid(row=row, column=0, padx=(300, 50))
+            row += 1
+
+
+
+        tk.Label(self, text="Device:",font = ('Arial',10)).grid(row = 30, column=0, padx=(0,550),pady=(35,0))
+        tk.Label(self, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
+
+        self.pack()
 

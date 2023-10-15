@@ -91,7 +91,7 @@ class Home(tk.Frame):
         options.config(bg = "white")
         options["menu"].config(bg = "white")
         submit_button = tk.Button(self, bg = "white", fg = "black", text='Submit', 
-                                  command=lambda: self.submit(modeList.get()))
+                                  command=lambda: (self.destroy(),self.submit(modeList.get(),parent)))
         submit_button.grid(row = 40, column = 12)
         sign_out_button = tk.Button(self, bg = "white", fg = "black", text="Sign Out", 
                                    command=lambda: (self.destroy(), SignIn(parent)))
@@ -99,15 +99,15 @@ class Home(tk.Frame):
         
         self.pack(padx=100,pady=100)
     
-    def submit(self, selected_mode):
+    def submit(self, selected_mode,parent):
         if   selected_mode == "AOO":
-            AOO()
+            AOO(parent)
         elif selected_mode == "VOO":
-            VOO()
+            VOO(parent)
         elif selected_mode == "AAI":
-            AAI()
+            AAI(parent)
         elif selected_mode == "VVI":
-            VVI()
+            VVI(parent)
 
 class SignIn(tk.Frame):
     def __init__(self, parent):
