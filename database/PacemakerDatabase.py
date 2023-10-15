@@ -1,6 +1,13 @@
 import psycopg2
 
 class PacemakerDatabase():
+    """Enables functionality to communicate with the pacemaker database.
+    Functionality provided includes:
+     * Connection to the database.
+     * Build tables in the database.
+     * Populate tables in the database.
+     * Store data in the database.
+     * Query and get results from the database."""
 
     __instance = None
     
