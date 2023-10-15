@@ -70,9 +70,9 @@ class PacemakerDatabase():
         """Create all necessary tables in the database."""
         try:
             self.make_connection()
-            self.cursor.execute(open("database\pacemaker_sql_files\create_tables.sql", "r").read())
+            self.cursor.execute(open("database/pacemaker_sql_files/create_tables.sql", "r").read())
             print("Created Tables.")
-            self.cursor.execute(open("database\pacemaker_sql_files\populate_tables.sql", "r").read())
+            self.cursor.execute(open("database/pacemaker_sql_files/populate_tables.sql", "r").read())
             print("Populated Tables.")
             self.connection.commit()
         except (Exception, psycopg2.Error) as error :
@@ -85,7 +85,7 @@ class PacemakerDatabase():
         try:
             self.make_connection()
             self.cursor.execute(
-                open("database\pacemaker_sql_files\drop_tables.sql", "r").read()
+                open("database/pacemaker_sql_files/drop_tables.sql", "r").read()
             )    
             self.connection.commit()      
         except (Exception, psycopg2.Error) as error :
