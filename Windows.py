@@ -128,13 +128,11 @@ class SignIn(tk.Frame):
 
 def sign_out(parent):
     for widgets in parent.winfo_children():
-        print(widgets)
         widgets.destroy()
     SignIn(parent)
             
 def destroy_all_widgets(parent):
     for widgets in parent.winfo_children():
-        print(widgets)
         widgets.destroy()
 
 def hide_widget(widget):
