@@ -7,13 +7,20 @@ from database.PacemakerDatabase import *
 
 class MainWindow():
     def __init__(self, master):
+        self.master = master
         mainframe = tk.Frame(master, bg = "white")
+        mainframe.main = self
         mainframe.pack(fill='both', expand=1)
         master.title("Pacemaker v0 0.1.0")
 
-        # add menubar
-        self.menubar = tk.Menu(master)
-        master.config(menu=self.menubar)
+        self.add_menubar()
+
+        # Initial frame
+        SignIn(mainframe)
+
+    def add_menubar(self):
+        self.menubar = tk.Menu(self.master)
+        self.master.config(menu = self.menubar)
 
         # add File to menubar
         self.file_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
@@ -40,12 +47,18 @@ class MainWindow():
         self.reports_menu.add_command(label = "Trending Report", command = reports.trending_report)
         self.reports_menu.add_command(label = "Final Report", command = reports.final_report)
 
-        # Initial frame
-        SignIn(mainframe)
+    def hide_menubar(self):
+        self.master.config(menu = "")
+
+    def show_menubar(self):
+        self.master.config(menu = self.menubar)
+        
 
 class Home(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, bg = "white")
+
+        parent.main.show_menubar()
 
         #tkinter needs stringvar type for label variables
         WelcomeMessage="Welcome "+ getUser()+"!"
@@ -80,19 +93,14 @@ class Home(tk.Frame):
         submit_button = tk.Button(self, bg = "white", fg = "black", text='Submit', 
                                   command=lambda: self.submit(modeList.get()))
         submit_button.grid(row = 40, column = 12)
-        sign_in_button = tk.Button(self, bg = "white", fg = "black", text="Sign Out", 
+        sign_out_button = tk.Button(self, bg = "white", fg = "black", text="Sign Out", 
                                    command=lambda: (self.destroy(), SignIn(parent)))
-        sign_in_button.grid(row=50, column=10, columnspan=10, pady=(50,0))
-
-        # sign_up_button = tk.Button(self.bottomframe, text="Sign Up", 
-        #                            command=lambda: (initialFrame.destroy(), SignUp(mainframe)))
-        # sign_up_button.pack(padx=10,pady=10)
-        # help hover
+        sign_out_button.grid(row=50, column=10, columnspan=10, pady=(50,0))
         
         self.pack(padx=100,pady=100)
     
     def submit(self, selected_mode):
-        if selected_mode == "AOO":
+        if   selected_mode == "AOO":
             AOO()
         elif selected_mode == "VOO":
             VOO()
@@ -100,18 +108,24 @@ class Home(tk.Frame):
             AAI()
         elif selected_mode == "VVI":
             VVI()
-    
 
 class SignIn(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
 
+        parent.main.hide_menubar()
+
         signInWindow=tk.Frame(self, bg="white", width="500", height="500" )
         signInWindow.pack()
         self.pack(padx=0,pady=0)
 
-        Loginpage(self)#self passed into Loginpage as root window
+        Loginpage(self) # self passed into Loginpage as root window
         self.destroy()
         Home(parent)
+        
+# Helper functions
+def hide_widget(widget):
+    widget.pack_forget()
 
-
+def show_widget(widget):
+    widget.pack()
