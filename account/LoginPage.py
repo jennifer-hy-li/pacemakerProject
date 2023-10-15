@@ -105,5 +105,4 @@ def Loginpage(my_frame):#my_frame is root
     return 0
 
 def getUser():
-
     return windowUsername
