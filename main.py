@@ -3,6 +3,7 @@ from Windows import *
 from database.PacemakerDatabase import *
 
 def main():
+    """The main function is responsible for setting up and running the program."""
     db = PacemakerDatabase()
     if not db.table_exists('account'):
         db.create_and_populate()

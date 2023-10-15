@@ -34,6 +34,9 @@ from PacemakerMode import AOO,VOO,AAI,VVI
 from database.PacemakerDatabase import *
 
 class MainWindow():
+    &#34;&#34;&#34;The MainWindow is responsible for holding subframes. 
+    This class allows frames to be created and destroyed, 
+    while still being held in the same space.&#34;&#34;&#34;
     def __init__(self, master):
         self.master = master
         mainframe = tk.Frame(master, bg = &#34;white&#34;)
@@ -48,6 +51,7 @@ class MainWindow():
         SignIn(mainframe)
 
     def add_menubar(self):
+        &#34;&#34;&#34;Adds the menubar to the master frame. This provides options such as File, Settings, and Reports menus.&#34;&#34;&#34;
         self.menubar = tk.Menu(self.master)
         self.master.config(menu = self.menubar)
 
@@ -77,13 +81,17 @@ class MainWindow():
         self.reports_menu.add_command(label = &#34;Final Report&#34;, command = reports.final_report)
 
     def hide_menubar(self):
+        &#34;&#34;&#34;Hides the menubar on the master frame. 
+        Use when it doesn&#39;t make sense to have a menubar for a particular frame.&#34;&#34;&#34;
         self.master.config(menu = &#34;&#34;)
 
     def show_menubar(self):
+        &#34;&#34;&#34;Shows the menubar on the master frame.&#34;&#34;&#34;
         self.master.config(menu = self.menubar)
         
 
 class Home(tk.Frame):
+    &#34;&#34;&#34;The Home class is the frame which welcomes the user after signing in, providing numerous options for the user.&#34;&#34;&#34;
     def __init__(self, parent):
         super().__init__(parent, bg = &#34;white&#34;)
 
@@ -129,6 +137,7 @@ class Home(tk.Frame):
         self.pack(padx=100,pady=100)
     
     def submit(self, selected_mode, parent):
+        &#34;&#34;&#34;Auxiliary function for the options pane to change the frame to the submitted option.&#34;&#34;&#34;
         if   selected_mode == &#34;AOO&#34;:
             AOO(parent)
         elif selected_mode == &#34;VOO&#34;:
@@ -139,6 +148,7 @@ class Home(tk.Frame):
             VVI(parent)
 
 class SignIn(tk.Frame):
+    &#34;&#34;&#34;Frame to sign a user in, given a username and password.&#34;&#34;&#34;
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -155,19 +165,15 @@ class SignIn(tk.Frame):
 # --------- Helper functions ---------- #
 
 def sign_out(parent):
+    &#34;&#34;&#34;Signs out the user by destroying any current frames and returning to the login screen.&#34;&#34;&#34;
     for widgets in parent.winfo_children():
         widgets.destroy()
     SignIn(parent)
             
 def destroy_all_widgets(parent):
+    &#34;&#34;&#34;Destroys all widgets on the parent frame.&#34;&#34;&#34;
     for widgets in parent.winfo_children():
-        widgets.destroy()
-
-def hide_widget(widget):
-    widget.pack_forget()
-
-def show_widget(widget):
-    widget.pack()</code></pre>
+        widgets.destroy()</code></pre>
 </details>
 </section>
 <section>
@@ -181,52 +187,28 @@ def show_widget(widget):
 <span>def <span class="ident">destroy_all_widgets</span></span>(<span>parent)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Destroys all widgets on the parent frame.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def destroy_all_widgets(parent):
+    &#34;&#34;&#34;Destroys all widgets on the parent frame.&#34;&#34;&#34;
     for widgets in parent.winfo_children():
         widgets.destroy()</code></pre>
-</details>
-</dd>
-<dt id="Windows.hide_widget"><code class="name flex">
-<span>def <span class="ident">hide_widget</span></span>(<span>widget)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def hide_widget(widget):
-    widget.pack_forget()</code></pre>
-</details>
-</dd>
-<dt id="Windows.show_widget"><code class="name flex">
-<span>def <span class="ident">show_widget</span></span>(<span>widget)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def show_widget(widget):
-    widget.pack()</code></pre>
 </details>
 </dd>
 <dt id="Windows.sign_out"><code class="name flex">
 <span>def <span class="ident">sign_out</span></span>(<span>parent)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Signs out the user by destroying any current frames and returning to the login screen.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def sign_out(parent):
+    &#34;&#34;&#34;Signs out the user by destroying any current frames and returning to the login screen.&#34;&#34;&#34;
     for widgets in parent.winfo_children():
         widgets.destroy()
     SignIn(parent)</code></pre>
@@ -242,7 +224,7 @@ def show_widget(widget):
 <span>(</span><span>parent)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Frame widget which may contain other widgets and can have a 3D border.</p>
+<div class="desc"><p>The Home class is the frame which welcomes the user after signing in, providing numerous options for the user.</p>
 <p>Construct a frame widget with the parent MASTER.</p>
 <p>Valid resource names: background, bd, bg, borderwidth, class,
 colormap, container, cursor, height, highlightbackground,
@@ -252,6 +234,7 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Home(tk.Frame):
+    &#34;&#34;&#34;The Home class is the frame which welcomes the user after signing in, providing numerous options for the user.&#34;&#34;&#34;
     def __init__(self, parent):
         super().__init__(parent, bg = &#34;white&#34;)
 
@@ -297,6 +280,7 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
         self.pack(padx=100,pady=100)
     
     def submit(self, selected_mode, parent):
+        &#34;&#34;&#34;Auxiliary function for the options pane to change the frame to the submitted option.&#34;&#34;&#34;
         if   selected_mode == &#34;AOO&#34;:
             AOO(parent)
         elif selected_mode == &#34;VOO&#34;:
@@ -322,12 +306,13 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
 <span>def <span class="ident">submit</span></span>(<span>self, selected_mode, parent)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Auxiliary function for the options pane to change the frame to the submitted option.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def submit(self, selected_mode, parent):
+    &#34;&#34;&#34;Auxiliary function for the options pane to change the frame to the submitted option.&#34;&#34;&#34;
     if   selected_mode == &#34;AOO&#34;:
         AOO(parent)
     elif selected_mode == &#34;VOO&#34;:
@@ -345,12 +330,17 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
 <span>(</span><span>master)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The MainWindow is responsible for holding subframes.
+This class allows frames to be created and destroyed,
+while still being held in the same space.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class MainWindow():
+    &#34;&#34;&#34;The MainWindow is responsible for holding subframes. 
+    This class allows frames to be created and destroyed, 
+    while still being held in the same space.&#34;&#34;&#34;
     def __init__(self, master):
         self.master = master
         mainframe = tk.Frame(master, bg = &#34;white&#34;)
@@ -365,6 +355,7 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
         SignIn(mainframe)
 
     def add_menubar(self):
+        &#34;&#34;&#34;Adds the menubar to the master frame. This provides options such as File, Settings, and Reports menus.&#34;&#34;&#34;
         self.menubar = tk.Menu(self.master)
         self.master.config(menu = self.menubar)
 
@@ -394,9 +385,12 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
         self.reports_menu.add_command(label = &#34;Final Report&#34;, command = reports.final_report)
 
     def hide_menubar(self):
+        &#34;&#34;&#34;Hides the menubar on the master frame. 
+        Use when it doesn&#39;t make sense to have a menubar for a particular frame.&#34;&#34;&#34;
         self.master.config(menu = &#34;&#34;)
 
     def show_menubar(self):
+        &#34;&#34;&#34;Shows the menubar on the master frame.&#34;&#34;&#34;
         self.master.config(menu = self.menubar)</code></pre>
 </details>
 <h3>Methods</h3>
@@ -405,12 +399,13 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
 <span>def <span class="ident">add_menubar</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Adds the menubar to the master frame. This provides options such as File, Settings, and Reports menus.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def add_menubar(self):
+    &#34;&#34;&#34;Adds the menubar to the master frame. This provides options such as File, Settings, and Reports menus.&#34;&#34;&#34;
     self.menubar = tk.Menu(self.master)
     self.master.config(menu = self.menubar)
 
@@ -444,12 +439,15 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
 <span>def <span class="ident">hide_menubar</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Hides the menubar on the master frame.
+Use when it doesn't make sense to have a menubar for a particular frame.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def hide_menubar(self):
+    &#34;&#34;&#34;Hides the menubar on the master frame. 
+    Use when it doesn&#39;t make sense to have a menubar for a particular frame.&#34;&#34;&#34;
     self.master.config(menu = &#34;&#34;)</code></pre>
 </details>
 </dd>
@@ -457,12 +455,13 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
 <span>def <span class="ident">show_menubar</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Shows the menubar on the master frame.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def show_menubar(self):
+    &#34;&#34;&#34;Shows the menubar on the master frame.&#34;&#34;&#34;
     self.master.config(menu = self.menubar)</code></pre>
 </details>
 </dd>
@@ -473,7 +472,7 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
 <span>(</span><span>parent)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Frame widget which may contain other widgets and can have a 3D border.</p>
+<div class="desc"><p>Frame to sign a user in, given a username and password.</p>
 <p>Construct a frame widget with the parent MASTER.</p>
 <p>Valid resource names: background, bd, bg, borderwidth, class,
 colormap, container, cursor, height, highlightbackground,
@@ -483,6 +482,7 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class SignIn(tk.Frame):
+    &#34;&#34;&#34;Frame to sign a user in, given a username and password.&#34;&#34;&#34;
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -519,8 +519,6 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p></div>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="Windows.destroy_all_widgets" href="#Windows.destroy_all_widgets">destroy_all_widgets</a></code></li>
-<li><code><a title="Windows.hide_widget" href="#Windows.hide_widget">hide_widget</a></code></li>
-<li><code><a title="Windows.show_widget" href="#Windows.show_widget">show_widget</a></code></li>
 <li><code><a title="Windows.sign_out" href="#Windows.sign_out">sign_out</a></code></li>
 </ul>
 </li>

@@ -5,6 +5,7 @@ import unittest
 db = database.PacemakerDatabase.get_instance()
 
 def database_test1():
+    """Tests the functionality for the account table."""
     # Test account table
     print("Test 1 - accounts table")
     db.create_and_populate()
@@ -26,26 +27,22 @@ def database_test1():
     db.drop_all_tables()
 
 def database_test2():
+    """Tests the SQL functionality for the parameters table."""
     print("Test 2 - parameters table")
     db.create_and_populate()
-    db.get_all_parameters()
+    db.get_parameters()
     db.drop_all_tables()
 
 def database_test3():
+    """Tests the SQL functionality for the modes table."""
     print("Test 3 - modes table")
     db.create_and_populate()
     db.get_all_modes()
     db.drop_all_tables()
 
 def database_test4():
-    print("Test 4 - mode parameters")
-    db.create_and_populate()
-    mode_parameters = db.get_modes_from_modeparameters()
-    for mode in mode_parameters:
-        print(mode)
-    
-def database_test5():
-    print("\nTest 5 - mode parameters")
+    """Tests the SQL functionality for the mode parameters table."""
+    print("\nTest 4 - mode parameters")
     db.create_and_populate()
     modes = db.get_all_modes()
     print(len(modes), "modes")
@@ -56,13 +53,8 @@ def database_test5():
     print("Should return empty list:", db.get_parameters(mode = 'fake'))
     db.drop_all_tables()
 
-def database_test6():
-    optionsList = db.get_unique_modes_from_modeparameters()
-    print(optionsList[0][0])
+database_test1()
+database_test2()
+database_test3()
+database_test4()
 
-# database_test1()
-# database_test2()
-# database_test3()
-# database_test4()
-# database_test5()
-database_test6()

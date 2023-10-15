@@ -6,7 +6,7 @@ class PacemakerDatabase():
     
     @staticmethod
     def get_instance():
-        """Static access method"""
+        """This method is used to statically access the database singleton object."""
         if PacemakerDatabase.__instance == None:
             PacemakerDatabase()
         return PacemakerDatabase.__instance
@@ -14,7 +14,6 @@ class PacemakerDatabase():
     def __init__(self, user = "postgres", password = "password", 
                  host = "localhost", port = "5432", database = "postgres"):
         """This constructor allows you to modify the server connection details if necessary."""
-
         if PacemakerDatabase.__instance != None:
             raise Exception("Cannot instantiate more than one instance. Use get_instance()")
         PacemakerDatabase.__instance = self
@@ -53,6 +52,8 @@ class PacemakerDatabase():
 
     # -------------------------- GENERAL SQL QUERIES START ------------------------- #
     def table_exists(self, table: str):
+        """Determines if there are any tables exists in the database.
+        Returns 1 if there are any tables, else returns 0."""
         try:
             self.make_connection()
             self.cursor.execute(f"SELECT exists(\
@@ -67,7 +68,9 @@ class PacemakerDatabase():
             self.close_connection()
     
     def create_and_populate(self):
-        """Create all necessary tables in the database."""
+        """Runs two SQL scripts to create and populate all necessary tables in the database.
+        This creates 5 tables in total. The structure for this relational database can be
+        viewed in the ER diagram in this same directory."""
         try:
             self.make_connection()
             self.cursor.execute(open("database/pacemaker_sql_files/create_tables.sql", "r").read())

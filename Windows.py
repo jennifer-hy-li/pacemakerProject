@@ -6,6 +6,9 @@ from PacemakerMode import AOO,VOO,AAI,VVI
 from database.PacemakerDatabase import *
 
 class MainWindow():
+    """The MainWindow is responsible for holding subframes. 
+    This class allows frames to be created and destroyed, 
+    while still being held in the same space."""
     def __init__(self, master):
         self.master = master
         mainframe = tk.Frame(master, bg = "white")
@@ -20,6 +23,7 @@ class MainWindow():
         SignIn(mainframe)
 
     def add_menubar(self):
+        """Adds the menubar to the master frame. This provides options such as File, Settings, and Reports menus."""
         self.menubar = tk.Menu(self.master)
         self.master.config(menu = self.menubar)
 
@@ -49,13 +53,17 @@ class MainWindow():
         self.reports_menu.add_command(label = "Final Report", command = reports.final_report)
 
     def hide_menubar(self):
+        """Hides the menubar on the master frame. 
+        Use when it doesn't make sense to have a menubar for a particular frame."""
         self.master.config(menu = "")
 
     def show_menubar(self):
+        """Shows the menubar on the master frame."""
         self.master.config(menu = self.menubar)
         
 
 class Home(tk.Frame):
+    """The Home class is the frame which welcomes the user after signing in, providing numerous options for the user."""
     def __init__(self, parent):
         super().__init__(parent, bg = "white")
 
@@ -101,6 +109,7 @@ class Home(tk.Frame):
         self.pack(padx=100,pady=100)
     
     def submit(self, selected_mode, parent):
+        """Auxiliary function for the options pane to change the frame to the submitted option."""
         if   selected_mode == "AOO":
             AOO(parent)
         elif selected_mode == "VOO":
@@ -111,6 +120,7 @@ class Home(tk.Frame):
             VVI(parent)
 
 class SignIn(tk.Frame):
+    """Frame to sign a user in, given a username and password."""
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -127,10 +137,12 @@ class SignIn(tk.Frame):
 # --------- Helper functions ---------- #
 
 def sign_out(parent):
+    """Signs out the user by destroying any current frames and returning to the login screen."""
     for widgets in parent.winfo_children():
         widgets.destroy()
     SignIn(parent)
             
 def destroy_all_widgets(parent):
+    """Destroys all widgets on the parent frame."""
     for widgets in parent.winfo_children():
         widgets.destroy()

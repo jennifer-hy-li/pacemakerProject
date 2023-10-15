@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>database.PacemakerDatabase API documentation</title>
+<title>PacemakerDatabase API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>database.PacemakerDatabase</code></h1>
+<h1 class="title">Module <code>PacemakerDatabase</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -34,7 +34,7 @@ class PacemakerDatabase():
     
     @staticmethod
     def get_instance():
-        &#34;&#34;&#34;Static access method&#34;&#34;&#34;
+        &#34;&#34;&#34;This method is used to statically access the database singleton object.&#34;&#34;&#34;
         if PacemakerDatabase.__instance == None:
             PacemakerDatabase()
         return PacemakerDatabase.__instance
@@ -42,7 +42,6 @@ class PacemakerDatabase():
     def __init__(self, user = &#34;postgres&#34;, password = &#34;password&#34;, 
                  host = &#34;localhost&#34;, port = &#34;5432&#34;, database = &#34;postgres&#34;):
         &#34;&#34;&#34;This constructor allows you to modify the server connection details if necessary.&#34;&#34;&#34;
-
         if PacemakerDatabase.__instance != None:
             raise Exception(&#34;Cannot instantiate more than one instance. Use get_instance()&#34;)
         PacemakerDatabase.__instance = self
@@ -81,6 +80,8 @@ class PacemakerDatabase():
 
     # -------------------------- GENERAL SQL QUERIES START ------------------------- #
     def table_exists(self, table: str):
+        &#34;&#34;&#34;Determines if there are any tables exists in the database.
+        Returns 1 if there are any tables, else returns 0.&#34;&#34;&#34;
         try:
             self.make_connection()
             self.cursor.execute(f&#34;SELECT exists(\
@@ -95,7 +96,9 @@ class PacemakerDatabase():
             self.close_connection()
     
     def create_and_populate(self):
-        &#34;&#34;&#34;Create all necessary tables in the database.&#34;&#34;&#34;
+        &#34;&#34;&#34;Runs two SQL scripts to create and populate all necessary tables in the database.
+        This creates 5 tables in total. The structure for this relational database can be
+        viewed in the ER diagram in this same directory.&#34;&#34;&#34;
         try:
             self.make_connection()
             self.cursor.execute(open(&#34;database/pacemaker_sql_files/create_tables.sql&#34;, &#34;r&#34;).read())
@@ -362,7 +365,7 @@ class PacemakerDatabase():
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="database.PacemakerDatabase.PacemakerDatabase"><code class="flex name class">
+<dt id="PacemakerDatabase.PacemakerDatabase"><code class="flex name class">
 <span>class <span class="ident">PacemakerDatabase</span></span>
 <span>(</span><span>user='postgres', password='password', host='localhost', port='5432', database='postgres')</span>
 </code></dt>
@@ -378,7 +381,7 @@ class PacemakerDatabase():
     
     @staticmethod
     def get_instance():
-        &#34;&#34;&#34;Static access method&#34;&#34;&#34;
+        &#34;&#34;&#34;This method is used to statically access the database singleton object.&#34;&#34;&#34;
         if PacemakerDatabase.__instance == None:
             PacemakerDatabase()
         return PacemakerDatabase.__instance
@@ -386,7 +389,6 @@ class PacemakerDatabase():
     def __init__(self, user = &#34;postgres&#34;, password = &#34;password&#34;, 
                  host = &#34;localhost&#34;, port = &#34;5432&#34;, database = &#34;postgres&#34;):
         &#34;&#34;&#34;This constructor allows you to modify the server connection details if necessary.&#34;&#34;&#34;
-
         if PacemakerDatabase.__instance != None:
             raise Exception(&#34;Cannot instantiate more than one instance. Use get_instance()&#34;)
         PacemakerDatabase.__instance = self
@@ -425,6 +427,8 @@ class PacemakerDatabase():
 
     # -------------------------- GENERAL SQL QUERIES START ------------------------- #
     def table_exists(self, table: str):
+        &#34;&#34;&#34;Determines if there are any tables exists in the database.
+        Returns 1 if there are any tables, else returns 0.&#34;&#34;&#34;
         try:
             self.make_connection()
             self.cursor.execute(f&#34;SELECT exists(\
@@ -439,7 +443,9 @@ class PacemakerDatabase():
             self.close_connection()
     
     def create_and_populate(self):
-        &#34;&#34;&#34;Create all necessary tables in the database.&#34;&#34;&#34;
+        &#34;&#34;&#34;Runs two SQL scripts to create and populate all necessary tables in the database.
+        This creates 5 tables in total. The structure for this relational database can be
+        viewed in the ER diagram in this same directory.&#34;&#34;&#34;
         try:
             self.make_connection()
             self.cursor.execute(open(&#34;database/pacemaker_sql_files/create_tables.sql&#34;, &#34;r&#34;).read())
@@ -698,18 +704,18 @@ class PacemakerDatabase():
 </details>
 <h3>Static methods</h3>
 <dl>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_instance"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_instance"><code class="name flex">
 <span>def <span class="ident">get_instance</span></span>(<span>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Static access method</p></div>
+<div class="desc"><p>This method is used to statically access the database singleton object.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
 def get_instance():
-    &#34;&#34;&#34;Static access method&#34;&#34;&#34;
+    &#34;&#34;&#34;This method is used to statically access the database singleton object.&#34;&#34;&#34;
     if PacemakerDatabase.__instance == None:
         PacemakerDatabase()
     return PacemakerDatabase.__instance</code></pre>
@@ -718,7 +724,7 @@ def get_instance():
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.add_user"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.add_user"><code class="name flex">
 <span>def <span class="ident">add_user</span></span>(<span>self, username: str, password: str)</span>
 </code></dt>
 <dd>
@@ -739,7 +745,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.close_connection"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.close_connection"><code class="name flex">
 <span>def <span class="ident">close_connection</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -755,17 +761,21 @@ def get_instance():
         self.connection.close()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.create_and_populate"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.create_and_populate"><code class="name flex">
 <span>def <span class="ident">create_and_populate</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Create all necessary tables in the database.</p></div>
+<div class="desc"><p>Runs two SQL scripts to create and populate all necessary tables in the database.
+This creates 5 tables in total. The structure for this relational database can be
+viewed in the ER diagram in this same directory.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def create_and_populate(self):
-    &#34;&#34;&#34;Create all necessary tables in the database.&#34;&#34;&#34;
+    &#34;&#34;&#34;Runs two SQL scripts to create and populate all necessary tables in the database.
+    This creates 5 tables in total. The structure for this relational database can be
+    viewed in the ER diagram in this same directory.&#34;&#34;&#34;
     try:
         self.make_connection()
         self.cursor.execute(open(&#34;database/pacemaker_sql_files/create_tables.sql&#34;, &#34;r&#34;).read())
@@ -779,7 +789,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.delete_user"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.delete_user"><code class="name flex">
 <span>def <span class="ident">delete_user</span></span>(<span>self, username)</span>
 </code></dt>
 <dd>
@@ -801,7 +811,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.drop_all_tables"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.drop_all_tables"><code class="name flex">
 <span>def <span class="ident">drop_all_tables</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -824,7 +834,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_all_account_parameters"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_all_account_parameters"><code class="name flex">
 <span>def <span class="ident">get_all_account_parameters</span></span>(<span>self, username: str)</span>
 </code></dt>
 <dd>
@@ -847,7 +857,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_all_modes"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_all_modes"><code class="name flex">
 <span>def <span class="ident">get_all_modes</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -868,7 +878,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_all_users"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_all_users"><code class="name flex">
 <span>def <span class="ident">get_all_users</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -889,7 +899,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_default_parameter_value"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_default_parameter_value"><code class="name flex">
 <span>def <span class="ident">get_default_parameter_value</span></span>(<span>self, mode: str, parameter: str)</span>
 </code></dt>
 <dd>
@@ -912,7 +922,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_modes_from_modeparameters"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_modes_from_modeparameters"><code class="name flex">
 <span>def <span class="ident">get_modes_from_modeparameters</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -934,7 +944,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_parameters"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_parameters"><code class="name flex">
 <span>def <span class="ident">get_parameters</span></span>(<span>self, username: str = None, mode: str = None, parameter: str = None)</span>
 </code></dt>
 <dd>
@@ -988,7 +998,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_password"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_password"><code class="name flex">
 <span>def <span class="ident">get_password</span></span>(<span>self, username: str)</span>
 </code></dt>
 <dd>
@@ -1011,7 +1021,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_unique_modes_from_modeparameters"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_unique_modes_from_modeparameters"><code class="name flex">
 <span>def <span class="ident">get_unique_modes_from_modeparameters</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1033,7 +1043,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_user"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_user"><code class="name flex">
 <span>def <span class="ident">get_user</span></span>(<span>self, username: str)</span>
 </code></dt>
 <dd>
@@ -1056,7 +1066,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.get_user_count"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.get_user_count"><code class="name flex">
 <span>def <span class="ident">get_user_count</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1079,7 +1089,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.make_connection"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.make_connection"><code class="name flex">
 <span>def <span class="ident">make_connection</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1098,7 +1108,7 @@ def get_instance():
     self.cursor = self.connection.cursor()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.modify_connection_arguments"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.modify_connection_arguments"><code class="name flex">
 <span>def <span class="ident">modify_connection_arguments</span></span>(<span>self, user='postgres', password='password', host='localhost', port='5432', database='postgres')</span>
 </code></dt>
 <dd>
@@ -1117,7 +1127,7 @@ def get_instance():
     self.database = database</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.set_default_parameter_value"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.set_default_parameter_value"><code class="name flex">
 <span>def <span class="ident">set_default_parameter_value</span></span>(<span>self, mode: str, parameter: str, defaultValue: int)</span>
 </code></dt>
 <dd>
@@ -1143,16 +1153,19 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.table_exists"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.table_exists"><code class="name flex">
 <span>def <span class="ident">table_exists</span></span>(<span>self, table: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Determines if there are any tables exists in the database.
+Returns 1 if there are any tables, else returns 0.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def table_exists(self, table: str):
+    &#34;&#34;&#34;Determines if there are any tables exists in the database.
+    Returns 1 if there are any tables, else returns 0.&#34;&#34;&#34;
     try:
         self.make_connection()
         self.cursor.execute(f&#34;SELECT exists(\
@@ -1167,7 +1180,7 @@ def get_instance():
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.upsert_parameter_value"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.upsert_parameter_value"><code class="name flex">
 <span>def <span class="ident">upsert_parameter_value</span></span>(<span>self, username: str, mode: str, parameter: str, value: float)</span>
 </code></dt>
 <dd>
@@ -1195,7 +1208,7 @@ Otherwise, the row will be inserted. This is known as upsert.</p></div>
         self.close_connection()</code></pre>
 </details>
 </dd>
-<dt id="database.PacemakerDatabase.PacemakerDatabase.user_exists"><code class="name flex">
+<dt id="PacemakerDatabase.PacemakerDatabase.user_exists"><code class="name flex">
 <span>def <span class="ident">user_exists</span></span>(<span>self, username: str)</span>
 </code></dt>
 <dd>
@@ -1228,38 +1241,33 @@ Otherwise, the row will be inserted. This is known as upsert.</p></div>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3>Super-module</h3>
-<ul>
-<li><code><a title="database" href="index.html">database</a></code></li>
-</ul>
-</li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="database.PacemakerDatabase.PacemakerDatabase" href="#database.PacemakerDatabase.PacemakerDatabase">PacemakerDatabase</a></code></h4>
+<h4><code><a title="PacemakerDatabase.PacemakerDatabase" href="#PacemakerDatabase.PacemakerDatabase">PacemakerDatabase</a></code></h4>
 <ul class="">
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.add_user" href="#database.PacemakerDatabase.PacemakerDatabase.add_user">add_user</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.close_connection" href="#database.PacemakerDatabase.PacemakerDatabase.close_connection">close_connection</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.create_and_populate" href="#database.PacemakerDatabase.PacemakerDatabase.create_and_populate">create_and_populate</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.delete_user" href="#database.PacemakerDatabase.PacemakerDatabase.delete_user">delete_user</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.drop_all_tables" href="#database.PacemakerDatabase.PacemakerDatabase.drop_all_tables">drop_all_tables</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_all_account_parameters" href="#database.PacemakerDatabase.PacemakerDatabase.get_all_account_parameters">get_all_account_parameters</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_all_modes" href="#database.PacemakerDatabase.PacemakerDatabase.get_all_modes">get_all_modes</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_all_users" href="#database.PacemakerDatabase.PacemakerDatabase.get_all_users">get_all_users</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_default_parameter_value" href="#database.PacemakerDatabase.PacemakerDatabase.get_default_parameter_value">get_default_parameter_value</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_instance" href="#database.PacemakerDatabase.PacemakerDatabase.get_instance">get_instance</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_modes_from_modeparameters" href="#database.PacemakerDatabase.PacemakerDatabase.get_modes_from_modeparameters">get_modes_from_modeparameters</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_parameters" href="#database.PacemakerDatabase.PacemakerDatabase.get_parameters">get_parameters</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_password" href="#database.PacemakerDatabase.PacemakerDatabase.get_password">get_password</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_unique_modes_from_modeparameters" href="#database.PacemakerDatabase.PacemakerDatabase.get_unique_modes_from_modeparameters">get_unique_modes_from_modeparameters</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_user" href="#database.PacemakerDatabase.PacemakerDatabase.get_user">get_user</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.get_user_count" href="#database.PacemakerDatabase.PacemakerDatabase.get_user_count">get_user_count</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.make_connection" href="#database.PacemakerDatabase.PacemakerDatabase.make_connection">make_connection</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.modify_connection_arguments" href="#database.PacemakerDatabase.PacemakerDatabase.modify_connection_arguments">modify_connection_arguments</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.set_default_parameter_value" href="#database.PacemakerDatabase.PacemakerDatabase.set_default_parameter_value">set_default_parameter_value</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.table_exists" href="#database.PacemakerDatabase.PacemakerDatabase.table_exists">table_exists</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.upsert_parameter_value" href="#database.PacemakerDatabase.PacemakerDatabase.upsert_parameter_value">upsert_parameter_value</a></code></li>
-<li><code><a title="database.PacemakerDatabase.PacemakerDatabase.user_exists" href="#database.PacemakerDatabase.PacemakerDatabase.user_exists">user_exists</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.add_user" href="#PacemakerDatabase.PacemakerDatabase.add_user">add_user</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.close_connection" href="#PacemakerDatabase.PacemakerDatabase.close_connection">close_connection</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.create_and_populate" href="#PacemakerDatabase.PacemakerDatabase.create_and_populate">create_and_populate</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.delete_user" href="#PacemakerDatabase.PacemakerDatabase.delete_user">delete_user</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.drop_all_tables" href="#PacemakerDatabase.PacemakerDatabase.drop_all_tables">drop_all_tables</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_all_account_parameters" href="#PacemakerDatabase.PacemakerDatabase.get_all_account_parameters">get_all_account_parameters</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_all_modes" href="#PacemakerDatabase.PacemakerDatabase.get_all_modes">get_all_modes</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_all_users" href="#PacemakerDatabase.PacemakerDatabase.get_all_users">get_all_users</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_default_parameter_value" href="#PacemakerDatabase.PacemakerDatabase.get_default_parameter_value">get_default_parameter_value</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_instance" href="#PacemakerDatabase.PacemakerDatabase.get_instance">get_instance</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_modes_from_modeparameters" href="#PacemakerDatabase.PacemakerDatabase.get_modes_from_modeparameters">get_modes_from_modeparameters</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_parameters" href="#PacemakerDatabase.PacemakerDatabase.get_parameters">get_parameters</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_password" href="#PacemakerDatabase.PacemakerDatabase.get_password">get_password</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_unique_modes_from_modeparameters" href="#PacemakerDatabase.PacemakerDatabase.get_unique_modes_from_modeparameters">get_unique_modes_from_modeparameters</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_user" href="#PacemakerDatabase.PacemakerDatabase.get_user">get_user</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.get_user_count" href="#PacemakerDatabase.PacemakerDatabase.get_user_count">get_user_count</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.make_connection" href="#PacemakerDatabase.PacemakerDatabase.make_connection">make_connection</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.modify_connection_arguments" href="#PacemakerDatabase.PacemakerDatabase.modify_connection_arguments">modify_connection_arguments</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.set_default_parameter_value" href="#PacemakerDatabase.PacemakerDatabase.set_default_parameter_value">set_default_parameter_value</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.table_exists" href="#PacemakerDatabase.PacemakerDatabase.table_exists">table_exists</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.upsert_parameter_value" href="#PacemakerDatabase.PacemakerDatabase.upsert_parameter_value">upsert_parameter_value</a></code></li>
+<li><code><a title="PacemakerDatabase.PacemakerDatabase.user_exists" href="#PacemakerDatabase.PacemakerDatabase.user_exists">user_exists</a></code></li>
 </ul>
 </li>
 </ul>

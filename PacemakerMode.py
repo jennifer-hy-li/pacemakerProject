@@ -17,7 +17,8 @@ class AOO(ParameterProcess,tk.Frame):
         super().__init__(parent)
         
         tk.Label(self, text="Mode: AOO", font = ('Arial',23)).grid(row = 1, column=0, padx=(50,0))
-        tk.Label(self, text="Atrium Paced | No chamber sensed | No response to sensing ", font = ('Arial',12)).grid(row=2,column=0,padx=(50,0),pady=(0,10))
+        tk.Label(self, text="Atrium Paced | No chamber sensed | No response to sensing ", 
+                 font = ('Arial',12)).grid(row=2,column=0,padx=(50,0),pady=(0,10))
         
         # Create Entry widgets for parameters
         self.param_entries = {}

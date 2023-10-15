@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>main API documentation</title>
+<title>Testing API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,27 +19,72 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>main</code></h1>
+<h1 class="title">Module <code>Testing</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import tkinter as tk
-from Windows import *
-from database.PacemakerDatabase import *
+<pre><code class="python">import PacemakerDatabase as database
+import unittest
 
-def main():
-    &#34;&#34;&#34;The main function is responsible for setting up and running the program.&#34;&#34;&#34;
-    db = PacemakerDatabase()
-    if not db.table_exists(&#39;account&#39;):
-        db.create_and_populate()
-    MainWindow(tk.Tk())
-    tk.mainloop()
+## Database testing
+db = database.PacemakerDatabase.get_instance()
 
-if __name__ == &#39;__main__&#39;:
-    main()</code></pre>
+def database_test1():
+    &#34;&#34;&#34;Tests the functionality for the account table.&#34;&#34;&#34;
+    # Test account table
+    print(&#34;Test 1 - accounts table&#34;)
+    db.create_and_populate()
+    for i in range(5):
+        db.add_user(f&#34;user{i}&#34;, &#34;password&#34;)
+    db.get_all_users()
+    db.add_user(&#34;Jay&#34;, &#34;jaysPassword&#34;)
+    db.get_all_users()
+    db.delete_user(&#34;Jay&#34;)
+    db.get_all_users()
+    db.get_user(&#34;user1&#34;)
+    for i in range(5):
+        db.add_user(f&#34;user{i+5}&#34;, &#34;password&#34;)
+    db.get_all_users()
+    print(&#34;expecting 10 user limit error for next operation:&#34;)
+    db.add_user(&#34;user11&#34;, &#34;password&#34;)
+    print(&#34;make sure program still works:&#34;)
+    db.get_all_users()
+    db.drop_all_tables()
+
+def database_test2():
+    &#34;&#34;&#34;Tests the SQL functionality for the parameters table.&#34;&#34;&#34;
+    print(&#34;Test 2 - parameters table&#34;)
+    db.create_and_populate()
+    db.get_parameters()
+    db.drop_all_tables()
+
+def database_test3():
+    &#34;&#34;&#34;Tests the SQL functionality for the modes table.&#34;&#34;&#34;
+    print(&#34;Test 3 - modes table&#34;)
+    db.create_and_populate()
+    db.get_all_modes()
+    db.drop_all_tables()
+
+def database_test4():
+    &#34;&#34;&#34;Tests the SQL functionality for the mode parameters table.&#34;&#34;&#34;
+    print(&#34;\nTest 4 - mode parameters&#34;)
+    db.create_and_populate()
+    modes = db.get_all_modes()
+    print(len(modes), &#34;modes&#34;)
+    for mode in modes:
+        parameters = db.get_parameters(mode = mode[0])
+        print(parameters)
+    # attempt to get parameters from a mode that does not exist
+    print(&#34;Should return empty list:&#34;, db.get_parameters(mode = &#39;fake&#39;))
+    db.drop_all_tables()
+
+database_test1()
+database_test2()
+database_test3()
+database_test4()</code></pre>
 </details>
 </section>
 <section>
@@ -49,22 +94,93 @@ if __name__ == &#39;__main__&#39;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="main.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>)</span>
+<dt id="Testing.database_test1"><code class="name flex">
+<span>def <span class="ident">database_test1</span></span>(<span>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>The main function is responsible for setting up and running the program.</p></div>
+<div class="desc"><p>Tests the functionality for the account table.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def main():
-    &#34;&#34;&#34;The main function is responsible for setting up and running the program.&#34;&#34;&#34;
-    db = PacemakerDatabase()
-    if not db.table_exists(&#39;account&#39;):
-        db.create_and_populate()
-    MainWindow(tk.Tk())
-    tk.mainloop()</code></pre>
+<pre><code class="python">def database_test1():
+    &#34;&#34;&#34;Tests the functionality for the account table.&#34;&#34;&#34;
+    # Test account table
+    print(&#34;Test 1 - accounts table&#34;)
+    db.create_and_populate()
+    for i in range(5):
+        db.add_user(f&#34;user{i}&#34;, &#34;password&#34;)
+    db.get_all_users()
+    db.add_user(&#34;Jay&#34;, &#34;jaysPassword&#34;)
+    db.get_all_users()
+    db.delete_user(&#34;Jay&#34;)
+    db.get_all_users()
+    db.get_user(&#34;user1&#34;)
+    for i in range(5):
+        db.add_user(f&#34;user{i+5}&#34;, &#34;password&#34;)
+    db.get_all_users()
+    print(&#34;expecting 10 user limit error for next operation:&#34;)
+    db.add_user(&#34;user11&#34;, &#34;password&#34;)
+    print(&#34;make sure program still works:&#34;)
+    db.get_all_users()
+    db.drop_all_tables()</code></pre>
+</details>
+</dd>
+<dt id="Testing.database_test2"><code class="name flex">
+<span>def <span class="ident">database_test2</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Tests the SQL functionality for the parameters table.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def database_test2():
+    &#34;&#34;&#34;Tests the SQL functionality for the parameters table.&#34;&#34;&#34;
+    print(&#34;Test 2 - parameters table&#34;)
+    db.create_and_populate()
+    db.get_parameters()
+    db.drop_all_tables()</code></pre>
+</details>
+</dd>
+<dt id="Testing.database_test3"><code class="name flex">
+<span>def <span class="ident">database_test3</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Tests the SQL functionality for the modes table.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def database_test3():
+    &#34;&#34;&#34;Tests the SQL functionality for the modes table.&#34;&#34;&#34;
+    print(&#34;Test 3 - modes table&#34;)
+    db.create_and_populate()
+    db.get_all_modes()
+    db.drop_all_tables()</code></pre>
+</details>
+</dd>
+<dt id="Testing.database_test4"><code class="name flex">
+<span>def <span class="ident">database_test4</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Tests the SQL functionality for the mode parameters table.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def database_test4():
+    &#34;&#34;&#34;Tests the SQL functionality for the mode parameters table.&#34;&#34;&#34;
+    print(&#34;\nTest 4 - mode parameters&#34;)
+    db.create_and_populate()
+    modes = db.get_all_modes()
+    print(len(modes), &#34;modes&#34;)
+    for mode in modes:
+        parameters = db.get_parameters(mode = mode[0])
+        print(parameters)
+    # attempt to get parameters from a mode that does not exist
+    print(&#34;Should return empty list:&#34;, db.get_parameters(mode = &#39;fake&#39;))
+    db.drop_all_tables()</code></pre>
 </details>
 </dd>
 </dl>
@@ -80,7 +196,10 @@ if __name__ == &#39;__main__&#39;:
 <ul id="index">
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="main.main" href="#main.main">main</a></code></li>
+<li><code><a title="Testing.database_test1" href="#Testing.database_test1">database_test1</a></code></li>
+<li><code><a title="Testing.database_test2" href="#Testing.database_test2">database_test2</a></code></li>
+<li><code><a title="Testing.database_test3" href="#Testing.database_test3">database_test3</a></code></li>
+<li><code><a title="Testing.database_test4" href="#Testing.database_test4">database_test4</a></code></li>
 </ul>
 </li>
 </ul>
