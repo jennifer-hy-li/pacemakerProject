@@ -105,6 +105,7 @@ class SignIn(tk.Frame):
         self.pack(padx=0,pady=0)
 
         Loginpage(self)#self passed into Loginpage as root window
+
         self.destroy()
         Home(parent)
 
