@@ -134,9 +134,3 @@ def sign_out(parent):
 def destroy_all_widgets(parent):
     for widgets in parent.winfo_children():
         widgets.destroy()
-
-def hide_widget(widget):
-    widget.pack_forget()
-
-def show_widget(widget):
-    widget.pack()
