@@ -9,6 +9,7 @@ class MainWindow():
     def __init__(self, master):
         self.master = master
         mainframe = tk.Frame(master, bg = "white")
+        self.mainframe = mainframe
         mainframe.main = self
         mainframe.pack(fill='both', expand=1)
         master.title("Pacemaker v0 0.1.0")
@@ -25,7 +26,7 @@ class MainWindow():
         # add File to menubar
         self.file_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
         self.menubar.add_cascade(menu = self.file_menu, label = "File")
-        self.file_menu.add_command(label = "Sign Out", command = util.sign_out)
+        self.file_menu.add_command(label = "Sign Out", command = lambda: sign_out(self.mainframe))
         self.file_menu.add_command(label = "Quit", command = exit)
 
         # add Settings to menubar
@@ -91,7 +92,7 @@ class Home(tk.Frame):
         options.config(bg = "white")
         options["menu"].config(bg = "white")
         submit_button = tk.Button(self, bg = "white", fg = "black", text='Submit', 
-                                  command=lambda: (self.destroy(),self.submit(modeList.get(),parent)))
+                                  command=lambda: (self.destroy(), self.submit(modeList.get(), parent)))
         submit_button.grid(row = 40, column = 12)
         sign_out_button = tk.Button(self, bg = "white", fg = "black", text="Sign Out", 
                                    command=lambda: (self.destroy(), SignIn(parent)))
@@ -99,7 +100,7 @@ class Home(tk.Frame):
         
         self.pack(padx=100,pady=100)
     
-    def submit(self, selected_mode,parent):
+    def submit(self, selected_mode, parent):
         if   selected_mode == "AOO":
             AOO(parent)
         elif selected_mode == "VOO":
@@ -122,8 +123,20 @@ class SignIn(tk.Frame):
         Loginpage(self) # self passed into Loginpage as root window
         self.destroy()
         Home(parent)
-        
-# Helper functions
+
+# --------- Helper functions ---------- #
+
+def sign_out(parent):
+    for widgets in parent.winfo_children():
+        print(widgets)
+        widgets.destroy()
+    SignIn(parent)
+            
+def destroy_all_widgets(parent):
+    for widgets in parent.winfo_children():
+        print(widgets)
+        widgets.destroy()
+
 def hide_widget(widget):
     widget.pack_forget()
 
