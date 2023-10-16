@@ -297,7 +297,7 @@ class PacemakerDatabase():
             self.cursor.execute(f"SELECT  defaultvalue\
                                 FROM    modeparameters\
                                 WHERE   mode = '{mode}' and parameter = '{parameter}';")
-            return self.cursor.fetchall()
+            return self.cursor.fetchone()[0]
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
         finally:
