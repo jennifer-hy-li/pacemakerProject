@@ -204,7 +204,8 @@ class PacemakerDatabase():
             self.close_connection()
 
     def get_parameters(self, username: str = None, mode: str = None, parameter: str = None):
-        """Get values, optionally restrict username and mode and parameter."""
+        """Gets the tuples (username, mode, parameter, values) 
+        where the optional parameters match in the database."""        
         try:
             self.make_connection()
             if username != None and mode != None and parameter != None:
@@ -293,7 +294,7 @@ class PacemakerDatabase():
         """Gets the default value assigned to one parameter from a particular mode."""
         try:
             self.make_connection()
-            self.cursor.execute(f"SELECT  *\
+            self.cursor.execute(f"SELECT  defaultvalue\
                                 FROM    modeparameters\
                                 WHERE   mode = '{mode}' and parameter = '{parameter}';")
             return self.cursor.fetchall()
