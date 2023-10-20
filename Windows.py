@@ -30,6 +30,7 @@ class MainWindow():
         # add File to menubar
         self.file_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
         self.menubar.add_cascade(menu = self.file_menu, label = "File")
+        self.file_menu.add_cascade(label = "Home", command = lambda: (destroy_all_widgets(self.mainframe), Home(self.mainframe)))
         self.file_menu.add_command(label = "Sign Out", command = lambda: sign_out(self.mainframe))
         self.file_menu.add_command(label = "Quit", command = exit)
 
