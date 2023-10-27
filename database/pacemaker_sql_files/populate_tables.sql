@@ -29,6 +29,11 @@ INSERT INTO mode VALUES ('AOO');
 INSERT INTO mode VALUES ('VOO');
 INSERT INTO mode VALUES ('AAI');
 INSERT INTO mode VALUES ('VVI');
+INSERT INTO mode VALUES ('AOOR');
+INSERT INTO mode VALUES ('VOOR');
+INSERT INTO mode VALUES ('AAIR');
+INSERT INTO mode VALUES ('VVIR');
+
 
 -- modeparameters Inserts
 --- AOO
@@ -60,3 +65,57 @@ INSERT INTO modeparameters VALUES ('VVI', 'Ventricular Sensitivity', -1);
 INSERT INTO modeparameters VALUES ('VVI', 'VRP', -1);
 INSERT INTO modeparameters VALUES ('VVI', 'Hysteresis', -1);
 INSERT INTO modeparameters VALUES ('VVI', 'Rate Smoothing', -1);
+
+--- ###R version INSERTS
+--- AOOR
+INSERT INTO modeparameters VALUES ('AOOR', 'Lower Rate Limit', -1);
+INSERT INTO modeparameters VALUES ('AOOR', 'Upper Rate Limit', -1);
+INSERT INTO modeparameters VALUES ('AOOR', 'Atrial Amplitude', -1);
+INSERT INTO modeparameters VALUES ('AOOR', 'Atrial Pulse Width', -1);
+INSERT INTO modeparameters VALUES ('AOOR', 'Maximum Sensor Rate', -1);
+INSERT INTO modeparameters VALUES ('AOOR', 'Activity Threshold', -1);
+INSERT INTO modeparameters VALUES ('AOOR', 'Reaction Time', -1);
+INSERT INTO modeparameters VALUES ('AOOR', 'Response Factor', -1);
+INSERT INTO modeparameters VALUES ('AOOR', 'Recovery Time', -1);
+--- VOOR
+INSERT INTO modeparameters VALUES ('VOOR', 'Lower Rate Limit', -1);
+INSERT INTO modeparameters VALUES ('VOOR', 'Upper Rate Limit', -1);
+INSERT INTO modeparameters VALUES ('VOOR', 'Ventricular Amplitude', -1);
+INSERT INTO modeparameters VALUES ('VOOR', 'Ventricular Pulse Width', -1);
+INSERT INTO modeparameters VALUES ('VOOR', 'Maximum Sensor Rate', -1);
+INSERT INTO modeparameters VALUES ('VOOR', 'Activity Threshold', -1);
+INSERT INTO modeparameters VALUES ('VOOR', 'Reaction Time', -1);
+INSERT INTO modeparameters VALUES ('VOOR', 'Response Factor', -1);
+INSERT INTO modeparameters VALUES ('VOOR', 'Recovery Time', -1);
+--- AAIR
+INSERT INTO modeparameters VALUES ('AAIR', 'Lower Rate Limit', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Upper Rate Limit', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Atrial Amplitude', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Atrial Pulse Width', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Atrial Sensitivity', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'ARP', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'PVARP', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Hysteresis', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Rate Smoothing', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Maximum Sensor Rate', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Activity Threshold', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Reaction Time', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Response Factor', -1);
+INSERT INTO modeparameters VALUES ('AAIR', 'Recovery Time', -1);
+--- VVIR
+INSERT INTO modeparameters VALUES ('VVIR', 'Lower Rate Limit', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Upper Rate Limit', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Ventricular Amplitude', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Ventricular Pulse Width', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Ventricular Sensitivity', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'VRP', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Hysteresis', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Rate Smoothing', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Maximum Sensor Rate', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Activity Threshold', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Reaction Time', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Response Factor', -1);
+INSERT INTO modeparameters VALUES ('VVIR', 'Recovery Time', -1);
+
+
+
