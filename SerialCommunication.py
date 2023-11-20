@@ -7,41 +7,34 @@ def main(port='COM6', baudrate=115200, timeout=0):
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
         print("Sending:", params_as_bytes())
         print("Writing", ser.write(params_as_bytes()), "bytes")
+        #  read until received 31 bytes
+        print("Reading", ser.read_until(size=35), "bytes")
+
+
 
 def params_as_bytes():
     params: bytearray  = []
-    GIVE_PARAMS1: int = 22
-    GIVE_PARAMS2: int = 18
-    MODE: int = 3  # VOO
-    LRL: int = 60
+    STANDARD: int = 22
+    GIVE_PARAMS: int = 18
+    TEST_PARAMS: int = 34
+    MODE: int = 1  # VOO
+    LRL: int = 50
     URL: int = 120
     ARP_DELAY: int = 200
     ATR_AMP: float = 3.5
-    VENT_AMP: float = 3.5
+    VENT_AMP: float = 2.0
     VRP_DELAY: int = 200
     ATR_PW: int = 10
-    VENT_PW: int = 10
+    VENT_PW: int = 2
     ATR_THRESHOLD: float = 1.8
     VENT_THRESHOLD: float = 2.2
     # convert to bytes and append to params
 
-    params.append(convert_to_bytes(GIVE_PARAMS1, 1))
-    params.append(convert_to_bytes(GIVE_PARAMS2, 1))
-    params.append(convert_to_bytes(MODE, 1))
-    params.append(convert_to_bytes(LRL, 2))
-    params.append(convert_to_bytes(URL, 2))
-    params.append(convert_to_bytes(ARP_DELAY, 2))
-    params.append(convert_to_bytes(ATR_AMP, 4))
-    params.append(convert_to_bytes(VENT_AMP, 4))
-    params.append(convert_to_bytes(VRP_DELAY, 2))
-    params.append(convert_to_bytes(ATR_PW, 2))
-    params.append(convert_to_bytes(VENT_PW, 2))
-    params.append(convert_to_bytes(ATR_THRESHOLD, 4))
-    params.append(convert_to_bytes(VENT_THRESHOLD, 4))
 
-    parameters = struct.pack('<BBBHHHffHHHFF', GIVE_PARAMS1, GIVE_PARAMS2, MODE, LRL, URL, 
+    parameters = struct.pack('<BBBHHHffHHHff', STANDARD, GIVE_PARAMS, MODE, LRL, URL, 
                              ARP_DELAY, ATR_AMP, VENT_AMP, VRP_DELAY, ATR_PW, VENT_PW,
                               ATR_THRESHOLD, VENT_THRESHOLD)
+    print(parameters)
     return parameters
 
 def convert_to_bytes(num, bytes = 8):
@@ -52,3 +45,4 @@ def convert_to_bytes(num, bytes = 8):
     
 if __name__ == '__main__':
     main()
+    # print(params_as_bytes())
