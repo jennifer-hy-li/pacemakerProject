@@ -17,19 +17,26 @@ def main(port='COM6', baudrate=115200, timeout=0):
         print("Writing", ser.write(set_parameters(MODE = 1)), "bytes")
         time.sleep(10)
         print("Writing", ser.write(set_parameters(MODE = 2)), "bytes")
+        print("Reading", read_egram_data(), "bytes")
 
-def set_parameters(MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 200, 
-                   ATR_AMP = 3.5, VENT_AMP = 3.5, VRP_DELAY = 200, 
+def set_parameters(MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 1, 
+                   ATR_AMP = 3.5, VENT_AMP = 3.5, VRP_DELAY = 1, 
                    ATR_PW = 10, VENT_PW = 10, ATR_THRESHOLD = 1.8, 
                    VENT_THRESHOLD = 2.2):
     """Sets the parameters for the pacemaker"""
     STANDARD: int = 22
     GIVE_PARAMS: int = 18
-    TEST_PARAMS: int = 34
     parameters = struct.pack('<BBBHHHffHHHff', STANDARD, GIVE_PARAMS, MODE, LRL, URL, 
                              ARP_DELAY, ATR_AMP, VENT_AMP, VRP_DELAY, ATR_PW, VENT_PW,
                               ATR_THRESHOLD, VENT_THRESHOLD)
     return parameters
+
+def read_egram_data():
+    """Reads the egram data from the pacemaker"""
+    STANDARD: int = 22
+    READ_EGRAM: int = 34
+    data = struct.pack('<BB', STANDARD, READ_EGRAM)
+    return data
 
 def convert_to_bytes(num, bytes = 8):
     """Converts a number to a bitstring of length bytes*8"""
