@@ -333,3 +333,13 @@ class PacemakerDatabase():
             self.close_connection()
     # -------------------------- MODES SQL QUERIES END --------------------------- #
 
+    def get_parameters_by_mode(self, mode):
+        """Get all parameters for a specific mode."""
+        try:
+            self.make_connection()
+            self.cursor.execute(f"SELECT parameter, value FROM modeparameters WHERE mode = '{mode}';")
+            return self.cursor.fetchall()
+        except (Exception, psycopg2.Error) as error:
+            print("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
