@@ -2,7 +2,7 @@ import tkinter as tk
 from database.PacemakerDatabase import *
 from account.LoginPage import *
 
-db = PacemakerDatabase.get_instance
+db = PacemakerDatabase.get_instance()
 class ParameterProcess:
     def process_parameter(parameter_name, value_var,mode):
         # Retrieve the input value for the specified parameter
