@@ -1,11 +1,15 @@
 import tkinter as tk
+from database.PacemakerDatabase import *
+from account.LoginPage import *
 
+db = PacemakerDatabase.get_instance
 class ParameterProcess:
-    def process_parameter(parameter_name, value_var):
+    def process_parameter(parameter_name, value_var,mode):
         # Retrieve the input value for the specified parameter
         value = value_var.get()
         # Process the value (replace this with your processing logic)
         print(f"Processing {parameter_name}: {value}")
+        db.upsert_parameter_value(username = getUser,mode=mode, parameter=parameter_name,value=value)
 
 
 class AOO(ParameterProcess,tk.Frame):
@@ -22,13 +26,15 @@ class AOO(ParameterProcess,tk.Frame):
         # Create Entry widgets for parameters
         self.param_entries = {}
         self.parameter_values = {}
-        
+        """
         parameters = [
             ("Lower rate limit", lowerRateLimit_AOO),
             ("Upper rate limit",upperRateLimit_AOO),
             ("Atrial amplitude",atrialAmplitude_AOO),
             ("Atrial pulse width",atrialPulse_Width_AOO)
-        ]
+        ]"""
+
+        parameters = db.get_parameters(mode ="AOO")
 
         row = 5  # Starting row for parameters
         for param, value_var in parameters:
