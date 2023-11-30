@@ -14,7 +14,7 @@ def read(port='COM6', baudrate=115200, timeout=0):
                 read_data = ser.read(ser.in_waiting)
                 unpacked_data = struct.unpack('<HHBHHHffffH', read_data)
                 break
-        print("Successfully read data:", struct.unpack('<HHBHHHffffH', read_data))
+        print("Successfully read data:", unpacked_data)
 
 def set_parameters(RECEIVE = True, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 200, 
                    ATR_AMP = 3.5, VENT_AMP = 3.5, VRP_DELAY = 200, 
