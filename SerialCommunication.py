@@ -6,16 +6,14 @@ def write(port='COM6', baudrate=115200, timeout=0):
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
         print("Writing", ser.write(set_parameters(RECEIVE = False, MODE = 3)), "bytes")        
 
-def read(port='COM6', baudrate=115200, timeout=0):
+def read(port='COM6', baudrate=115200, timeout=0) -> tuple:
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
-        print("Sending", ser.write(set_parameters(RECEIVE = True, MODE = 1)), "bytes of read parameters")
-        while True:
-            print(ser.in_waiting)
-            if ser.in_waiting == 63:
-                read_data = ser.read(ser.in_waiting)
-                unpacked_data = struct.unpack('<HHBHHHffHHHHHHffddd', read_data)
-                break
-        print("Successfully read data:", unpacked_data)
+        ser.write(set_parameters(RECEIVE = True))
+        while ser.in_waiting != 16:
+            continue
+        read_data = ser.read(ser.in_waiting)
+        unpacked_signals = struct.unpack('<dd', read_data)
+        return unpacked_signals
 
 def set_parameters(RECEIVE = True, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 200, 
                    ATR_AMP = 3.5, VENT_AMP = 3.5, VRP_DELAY = 200, 
@@ -30,7 +28,6 @@ def set_parameters(RECEIVE = True, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 20
                              ARP_DELAY, ATR_AMP, VENT_AMP, VRP_DELAY, ATR_PW, VENT_PW,
                              ATR_SENSE, VENT_SENSE, VARP, MAX_SR, REACT_TIME, RESP_FACTOR,
                              REC_TIME, ACTIVITY_THRES)
-    print(struct.unpack('<BBBHHHffHHHffHHHHHd', parameters))
     return parameters
 
 if __name__ == '__main__':
