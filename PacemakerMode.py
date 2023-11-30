@@ -4,20 +4,30 @@ from account.LoginPage import *
 
 db = PacemakerDatabase.get_instance()
 class ParameterProcess:
-    def process_parameter(parameter_name, value_var,mode):
-        # Retrieve the input value for the specified parameter
-        value = value_var.get()
-        # Process the value (replace this with your processing logic)
-        print(f"Processing {parameter_name}: {value}")
-        db.upsert_parameter_value(username = getUser,mode=mode, parameter=parameter_name,value=value)
+    @staticmethod
+    def process_parameter(parameters,param_mode:str):
+        for parameter_name,value_var in parameters:
+            # Retrieve the input value for the specified parameter
+            value = value_var.get()
+            # Process the value (replace this with your processing logic)
+            print(f"Processing {parameter_name}: {value}")
+            db.upsert_parameter_value(username = getUser(), mode= param_mode, parameter=parameter_name,value=value)
 
+    def increment_counter(self,value_var):
+        current_value = value_var.get()
+        new_value =  round(current_value + 0.1,1)
+        value_var.set(new_value)
+
+
+
+    def decrement_counter(self,value_var):
+        current_value = value_var.get()
+        new_value = round(current_value - 0.1,1)
+        value_var.set(new_value)
+    
 
 class AOO(ParameterProcess,tk.Frame):
     def __init__(self,parent):
-        lowerRateLimit_AOO = tk.StringVar()
-        upperRateLimit_AOO = tk.StringVar()
-        atrialAmplitude_AOO = tk.StringVar()
-        atrialPulse_Width_AOO = tk.StringVar()
         super().__init__(parent)
         
         tk.Label(self, text="Mode: AOO", font = ('Arial',23)).grid(row = 1, column=0, padx=(50,0))
@@ -27,41 +37,59 @@ class AOO(ParameterProcess,tk.Frame):
         # Create Entry widgets for parameters
         self.param_entries = {}
         self.parameter_values = {}
-        """
-        parameters = [
-            ("Lower rate limit", lowerRateLimit_AOO),
-            ("Upper rate limit",upperRateLimit_AOO),
-            ("Atrial amplitude",atrialAmplitude_AOO),
-            ("Atrial pulse width",atrialPulse_Width_AOO)
-        ]"""
-
+        
         parameters = db.get_parameters(mode ="AOO")
+        parameter_tuples: list(tuple) = []
+        i=0
+        for param in parameters:
+            value = tk.DoubleVar()
+            saved_value = db.get_all_account_parameters(getUser())
+            print(saved_value)
+           # saved_value.sort(key = lambda x:x[1])
+            
+            if saved_value is not None:
+                value.set(saved_value[i][3])
+                i+=1
+            #print(param[2])
+            parameter_tuples.append((param[1], value))
+        
+    
 
+        
         row = 5  # Starting row for parameters
-        for param, value_var in parameters:
-            label = tk.Label(self, text=f" {param}", font=('Arial', 12))
+        for parameter_name, value_var in parameter_tuples:
+            label = tk.Label(self, text=f" {parameter_name}", font=('Arial', 12))
             label.grid(row=row, column=0, sticky="w", padx=(0, 0))
-            entry = tk.Entry(self, textvariable=value_var)
-            entry.grid(row=row, column=0, padx=(50, 0))  # Use padx to adjust the spacing
-            self.param_entries[param] = entry
+            
+            self.increment_button = tk.Button(self, text="+", command= lambda v =value_var: self.increment_counter(v))
+            self.increment_button.grid(row=row, column=0, padx=(100, 0)) 
 
+            num = tk.Label(self, textvariable=value_var, font=('Arial', 16))
+            num.grid(row=row, column=0, padx=(20, 20))   # Adjusted column for the label
+
+            self.decrement_button = tk.Button(self, text="-", command=lambda v= value_var: self.decrement_counter(v))
+            self.decrement_button.grid(row=row, column=0, padx=(0, 100)) 
             # Add a button for each parameter
-            process_button = tk.Button(self, text=f"Process", command=lambda p=param, v=value_var: ParameterProcess.process_parameter(p, v))
+            process_button = tk.Button(self, text=f"Process", command=lambda p=parameter_name, v=value_var,m="AOO": ParameterProcess.process_parameter([(p,v)],m))
             process_button.grid(row=row, column=0,padx=(300, 50))  # Place the button in a separate column
             row += 1
         
+        save_button = tk.Button(self, text="Save", command=self.save_parameters)
+        save_button.grid(row=row, column=0, padx=(300, 50), pady=(20, 0))
+
         tk.Label(self, text="Device:", font=('Arial', 10)).grid(row=30, column=0, padx=(0, 550), pady=(140, 0))
         tk.Label(self, text="[Show status + Device ID]", font=('Arial', 9)).grid(row=31, column=0, padx=(0, 450), pady=(0, 0))
 
         self.pack()
-        
+
+    def save_parameters(self):
+        # Save all processed parameters
+        parameters_to_save = [(param_name, value_var) for param_name, value_var in self.parameter_values.items()]
+        ParameterProcess.process_parameter(parameters_to_save, "AOO")
+        print("Parameters saved.")
+
 class VOO(tk.Frame):
     def __init__(self,parent):
-        lowerRateLimit_VOO = tk.StringVar()
-        upperRateLimit_VOO = tk.StringVar()
-        ventricularAmplitude_VOO = tk.StringVar()
-        VentricularPulseWidth_VOO = tk.StringVar()
-
         super().__init__(parent)
         tk.Label(self, text="MODE: VOO", font = ('Arial',20)).grid(row = 1, column=0, padx=(70,0))
         tk.Label(self, text="Ventrical Paced | No chamber sensed | No response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(70,0),pady=(0,10))
@@ -69,45 +97,35 @@ class VOO(tk.Frame):
         # Create Entry widgets for parameters
         self.param_entries = {}
         self.parameter_values = {}
-        parameters = [
-            ("Lower rate limit", lowerRateLimit_VOO),
-            ("Upper rate limit",upperRateLimit_VOO),
-            ("Ventricular amplitude",ventricularAmplitude_VOO),
-            ("Ventricular pulse width",VentricularPulseWidth_VOO)
-        ]
+
+        parameters = db.get_parameters(mode ="VOO")
+        parameter_tuples: list(tuple) = []
+        for param in parameters:
+            value = tk.StringVar()
+            print(param)
+            parameter_tuples.append((param[1], value))
         
         row = 5  # Starting row for parameters
-        for param, value_var in parameters:
-            label = tk.Label(self, text=f" {param}", font=('Arial', 12))
+        for parameter_name, value_var in parameter_tuples:
+            label = tk.Label(self, text=f" {parameter_name}", font=('Arial', 12))
             label.grid(row=row, column=0, sticky="w", padx=(0, 0))
             entry = tk.Entry(self, textvariable=value_var)
-            entry.grid(row=row, column=0, padx=(50, 0) )  # Use padx to adjust the spacing
-            self.param_entries[param] = entry
+            entry.grid(row=row, column=0, padx=(50, 0))  # Use padx to adjust the spacing
+            self.param_entries[parameter_name] = entry
 
             # Add a button for each parameter
-            process_button = tk.Button(self, text=f"Process", command=lambda p=param, v=value_var: ParameterProcess.process_parameter(p, v))
-            process_button.grid(row=row, column=0, padx=(300, 50))
+            process_button = tk.Button(self, text=f"Process", command=lambda p=parameter_name, v=value_var,m="VOO": ParameterProcess.process_parameter([(p,v)],m))
+            process_button.grid(row=row, column=0,padx=(300, 50))  # Place the button in a separate column
             row += 1
-
-        tk.Label(self, text="Device:",font = ('Arial',10)).grid(row = 30, column=0, padx=(0,550),pady=(140,0))
-        tk.Label(self, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
         
+        tk.Label(self, text="Device:", font=('Arial', 10)).grid(row=30, column=0, padx=(0, 550), pady=(140, 0))
+        tk.Label(self, text="[Show status + Device ID]", font=('Arial', 9)).grid(row=31, column=0, padx=(0, 450), pady=(0, 0))
 
         self.pack()
 
 
 class AAI (tk.Frame):
     def __init__(self,parent):
-        lowerRateLimit_AAI = tk.StringVar()
-        upperRateLimit_AAI = tk.StringVar()
-        atrialAmplitude_AAI = tk.StringVar()
-        atrialPulse_Width_AAI = tk.StringVar()
-        atrialSensitivity_AAI = tk.StringVar()
-        arp_AAI = tk.StringVar()
-        pvarp_AAI = tk.StringVar()
-        hystersis_AAI = tk.StringVar()
-        rateSmoothing_AAI = tk.StringVar()
-        
         super().__init__(parent)
         tk.Label(self, text="Mode: AAI", font = ('Arial',20)).grid(row = 1, column=0, padx=(70,0))
         tk.Label(self, text="Atrium Paced | Atrium chamber sensed | Inhibited response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(70,0), pady=(0,10))
@@ -115,28 +133,24 @@ class AAI (tk.Frame):
         # Create Entry widgets for parameters
         self.param_entries = {}
         self.parameter_values = {}
-        parameters = [
-            ("Lower rate limit", lowerRateLimit_AAI),
-            ("Upper rate limit",upperRateLimit_AAI),
-            ("Atrial amplitude",atrialAmplitude_AAI),
-            ("Atrial pulse width",atrialPulse_Width_AAI),
-            ("Atrial sensitivity",atrialSensitivity_AAI),
-            ("ARP",arp_AAI),
-            ("PVARP",pvarp_AAI),
-            ("Hystersis",hystersis_AAI),
-            ("Rate Smoothing",rateSmoothing_AAI)
+
+        parameters = db.get_parameters(mode ="AAI")
+        parameter_tuples: list(tuple) = []
+        for param in parameters:
+            value = tk.StringVar()
+            print(param)
+            parameter_tuples.append((param[1], value))
         
-        ]
         row = 5  # Starting row for parameters
-        for param, value_var in parameters:
-            label = tk.Label(self, text=f" {param}", font=('Arial', 12))
+        for parameter_name, value_var in parameter_tuples:
+            label = tk.Label(self, text=f" {parameter_name}", font=('Arial', 12))
             label.grid(row=row, column=0, sticky="w", padx=(0, 0))
             entry = tk.Entry(self, textvariable=value_var)
-            entry.grid(row=row, column=0, padx=(50, 0) )  # Use padx to adjust the spacing
-            self.param_entries[param] = entry
+            entry.grid(row=row, column=0, padx=(50, 0))  # Use padx to adjust the spacing
+            self.param_entries[parameter_name] = entry
 
             # Add a button for each parameter
-            process_button = tk.Button(self, text=f"Process", command=lambda p=param, v=value_var: ParameterProcess.process_parameter(p, v))
+            process_button = tk.Button(self, text=f"Process", command=lambda p=parameter_name, v=value_var,m="AAI": ParameterProcess.process_parameter([(p,v)],m))
             process_button.grid(row=row, column=0, padx=(300, 50))
             row += 1
        
@@ -147,15 +161,6 @@ class AAI (tk.Frame):
 
 class VVI(tk.Frame):
     def __init__(self,parent):
-        lowerRateLimit_VVI = tk.StringVar()
-        upperRateLimit_VVI = tk.StringVar()
-        ventricularAmplitude_VVI = tk.StringVar()
-        ventricularPulse_Width_VVI = tk.StringVar()
-        ventricularSensitivity_VVI = tk.StringVar()
-        vrp_VVI = tk.StringVar()
-        hystersis_VVI = tk.StringVar()
-        rateSmoothing_VVI = tk.StringVar()
-
         super().__init__(parent)
         tk.Label(self, text="Mode: VVI", font = ('Arial',20)).grid(row = 1, column=0, padx=(50,0))
         tk.Label(self, text="Ventricle Paced | Ventricle chambers sensed | Inhibited response to sensing ", font = ('Arial',13)).grid(row=2,column=0,padx=(0,0),pady=(0,10))
@@ -163,31 +168,26 @@ class VVI(tk.Frame):
         # Create Entry widgets for parameters
         self.param_entries = {}
         self.parameter_values = {}
-        parameters = [
-            ("Lower rate limit", lowerRateLimit_VVI),
-            ("Upper rate limit",upperRateLimit_VVI),
-            ("Ventricular amplitude",ventricularAmplitude_VVI),
-            ("Ventricular pulse width",ventricularPulse_Width_VVI),
-            ("Ventricular sensitivity",ventricularSensitivity_VVI),
-            ("VRP",vrp_VVI),
-            ("Hystersis",hystersis_VVI),
-            ("Rate Smoothing",rateSmoothing_VVI)
+
+        parameters = db.get_parameters(mode ="VVI")
+        parameter_tuples: list(tuple) = []
+        for param in parameters:
+            value = tk.StringVar()
+            print(param)
+            parameter_tuples.append((param[1], value))
         
-        ]
         row = 5  # Starting row for parameters
-        for param, value_var in parameters:
-            label = tk.Label(self, text=f" {param}", font=('Arial', 12))
+        for parameter_name, value_var in parameter_tuples:
+            label = tk.Label(self, text=f" {parameter_name}", font=('Arial', 12))
             label.grid(row=row, column=0, sticky="w", padx=(0, 0))
             entry = tk.Entry(self, textvariable=value_var)
-            entry.grid(row=row, column=0, padx=(50, 0) )  # Use padx to adjust the spacing
-            self.param_entries[param] = entry
+            entry.grid(row=row, column=0, padx=(50, 0))  # Use padx to adjust the spacing
+            self.param_entries[parameter_name] = entry
 
             # Add a button for each parameter
-            process_button = tk.Button(self, text=f"Process", command=lambda p=param, v=value_var: ParameterProcess.process_parameter(p, v))
+            process_button = tk.Button(self, text=f"Process", command=lambda p=parameter_name, v=value_var,m="VVI": ParameterProcess.process_parameter([(p,v)],m))
             process_button.grid(row=row, column=0, padx=(300, 50))
             row += 1
-
-
 
         tk.Label(self, text="Device:",font = ('Arial',10)).grid(row = 30, column=0, padx=(0,550),pady=(35,0))
         tk.Label(self, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
