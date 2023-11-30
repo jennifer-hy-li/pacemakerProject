@@ -7,6 +7,8 @@ def main():
     db = PacemakerDatabase()
     if not db.table_exists('account'):
         db.create_and_populate()
+    x = db.get_all_account_parameters('123')
+    print(x)
     MainWindow(tk.Tk())
     tk.mainloop()
 
