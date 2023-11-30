@@ -196,7 +196,7 @@ class PacemakerDatabase():
             self.make_connection()
             self.cursor.execute(f"SELECT  *\
                                 FROM    accountparameters\
-                                WHERE   user = '{username}';")
+                                WHERE   username = '{username}';")
             return self.cursor.fetchall()
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
