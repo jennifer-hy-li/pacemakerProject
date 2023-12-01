@@ -33,18 +33,27 @@ class MainWindow():
         canvas.create_oval(2, 2, 18, 18, fill=indicator.Color, tags="connection_circle")
         canvas.pack(side=LEFT)
         def update():
-            
             connection_label.config(text=indicator.connectionLabel, fg=indicator.Color)
             canvas.delete("connection_circle")
             canvas.create_oval(2,2,18,18, fill=indicator.Color, tags="connection_circle")
 
-        self.master.after(0, indicator.check_connection)#repeatedly checks for connection
-        self.master.after(0, update)
+        # self.master.after(100, indicator.check_connection)#repeatedly checks for connection
+        # self.master.after(100, update)
 
         # set_global_connection_status(1)
+        # Set up periodic check for the indicator
+        self.check_indicator(indicator, update)
 
         # Initial frame
         SignIn(mainframe)
+
+    def check_indicator(self, indicator, update_function):
+        # Check the indicator every 1000 milliseconds (1 second)
+        self.master.after(1000, self.check_indicator, indicator, update_function)
+
+        # Perform the indicator check and update
+        indicator.check_connection()
+        update_function()
 
     def add_menubar(self):
         """Adds the menubar to the master frame. This provides options such as File, Settings, and Reports menus."""
