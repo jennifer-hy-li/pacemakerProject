@@ -1,7 +1,7 @@
 import tkinter as tk
 import future_utility.UtilityFunctions as util
 import future_utility.PrintedReports as reports
-from egram import egram
+from egram import *
 from account.LoginPage import *
 from PacemakerMode import AOO,VOO,AAI,VVI
 from database.PacemakerDatabase import *
@@ -19,6 +19,8 @@ class MainWindow():
         mainframe.main = self
         mainframe.pack(fill='both', expand=1)
         master.title("Pacemaker v0 0.1.0")
+
+        self.e = egram()
 
         self.add_menubar()
         self.serial_com_indicator()
@@ -47,9 +49,8 @@ class MainWindow():
         self.reports_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
         self.menubar.add_cascade(menu = self.reports_menu, label = "Reports")
 
-        self.reports_menu.add_command(label = "Bradycardia Parameters", command = reports.bradycardia_parameters_report)
-        # animate atrium
-        self.reports_menu.add_command(label = "Atrium Electrogram", command = lambda: egram().animate_atr(0))
+        self.reports_menu.add_command(label = "Atrium Electrogram", command = lambda: self.e.display_atr_egram())
+        self.reports_menu.add_command(label = "Ventricle Electrogram", command = lambda: self.e.display_vent_egram())
 
 
     def hide_menubar(self):

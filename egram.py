@@ -10,12 +10,26 @@ class egram():
     def __init__(self):
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(1,1,1)
+        self.fig.canvas.mpl_connect('close_event', self.on_close)
         self.signals = []
         self.timestamps = []
+        self.ani = None
+    
+    def on_close(self, event):
+        """Stops the animation when the user closes the window."""
+        if self.ani != None:
+            self.ani.event_source.stop()
 
     def animate_signal_helper(self, i, signal_index: int):
         # Read pacemaker signals
         signals = sc.read()
+
+        # close the animation if the serial port is closed
+        # or if the user closes the window.
+        # if signals == None or self.fig.get_axis():
+        #     plt.close()
+        #     return
+
         signal = signals[signal_index]
 
         # Add x and y to lists
@@ -55,7 +69,7 @@ class egram():
         plt.show()
     
     def stop_animation(self):
-        self.ani.event_source.stop()
+        self.ani.event_source.pause()
 
     def animate_signals(self, i):
         """Animates both atrium and ventricle signals in subplots,
