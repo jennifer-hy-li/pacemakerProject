@@ -3,7 +3,7 @@ import future_utility.UtilityFunctions as util
 import future_utility.PrintedReports as reports
 from egram import *
 from account.LoginPage import *
-from PacemakerMode import AOO,VOO,AAI,VVI
+from PacemakerMode import AOO,VOO,AAI,VVI, AOOR,VOOR,AAIR,VVIR
 from database.PacemakerDatabase import *
 
 connection_status =0
@@ -150,6 +150,15 @@ class Home(tk.Frame):
             AAI(parent)
         elif selected_mode == "VVI":
             VVI(parent)
+        elif selected_mode == "AOOR":
+            AOOR(parent)
+
+        elif selected_mode == "VOOR":
+            VOOR(parent)
+        elif selected_mode == "AAIR":
+            AAIR(parent)
+        elif selected_mode == "VVIR":
+            VVIR(parent)
 
 class SignIn(tk.Frame):
     """Frame to sign a user in, given a username and password."""
