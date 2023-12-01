@@ -4,7 +4,7 @@ import struct
 def write(port='COM6', baudrate=115200, timeout=0):
     # write an array of data
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
-        print("Writing", ser.write(set_parameters(RECEIVE = False)), "bytes")        
+        print("Writing", ser.write(set_parameters(RECEIVE = False, MODE = 3)), "bytes")        
 
 def read(port='COM6', baudrate=115200, timeout=0) -> tuple:
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
@@ -31,7 +31,7 @@ def set_parameters(RECEIVE = False, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 2
     return parameters
 
 if __name__ == '__main__':
-    write()
+    read()
 
     # parameters pack translation:
     # uint8 = B

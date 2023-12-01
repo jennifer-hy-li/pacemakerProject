@@ -3,6 +3,7 @@ from datetime import *
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import SerialCommunication as sc
+import threading
 
 class egram():
 
@@ -14,7 +15,7 @@ class egram():
 
     def animate_signal_helper(self, i, signal_index: int):
         # Read pacemaker signals
-        signals = sc.read(RECEIEVE = True)
+        signals = sc.read()
         signal = signals[signal_index]
 
         # Add x and y to lists
@@ -44,6 +45,17 @@ class egram():
 
     def animate_vent(self, i):
         self.animate_signal_helper(i, 1)
+    
+    def display_atr_egram(self):
+        self.ani = animation.FuncAnimation(self.fig, self.animate_atr, interval=10)
+        plt.show()
+    
+    def display_vent_egram(self):
+        self.ani = animation.FuncAnimation(self.fig, self.animate_vent, interval=10)
+        plt.show()
+    
+    def stop_animation(self):
+        self.ani.event_source.stop()
 
     def animate_signals(self, i):
         """Animates both atrium and ventricle signals in subplots,
@@ -55,10 +67,6 @@ class egram():
         self.animate_vent(i)
         
         
-e = egram()
-# ani = animation.FuncAnimation(e.fig, e.animate_atr, interval=50)
-# plt.show()
-
-ani = animation.FuncAnimation(e.fig, e.animate_vent, interval=50)
-plt.show()
-    
+if __name__ == '__main__':
+    e = egram()
+    e.display_atr_egram()

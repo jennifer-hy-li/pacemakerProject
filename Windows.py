@@ -1,6 +1,7 @@
 import tkinter as tk
 import future_utility.UtilityFunctions as util
 import future_utility.PrintedReports as reports
+from Egram import egram
 from account.LoginPage import *
 from PacemakerMode import AOO,VOO,AAI,VVI
 from database.PacemakerDatabase import *
@@ -42,16 +43,11 @@ class MainWindow():
         # add Reports to menubar
         self.reports_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
         self.menubar.add_cascade(menu = self.reports_menu, label = "Reports")
+
         self.reports_menu.add_command(label = "Bradycardia Parameters", command = reports.bradycardia_parameters_report)
-        self.reports_menu.add_command(label = "Temporary Parameters", command = reports.temporary_parameters_report)
-        self.reports_menu.add_command(label = "Implant Data", command = reports.implant_data_report)
-        self.reports_menu.add_command(label = "Threshold Test Results", command = reports.threshold_test_results_report)
-        self.reports_menu.add_command(label = "Measured Data", command = reports.measured_data_report)
-        self.reports_menu.add_command(label = "Marker Legend", command = reports.marker_legend_report)
-        self.reports_menu.add_command(label = "Rate Histogram", command = reports.rate_histogram_report)
-        self.reports_menu.add_command(label = "Threshold Test Results", command = reports.threshold_test_results_report)
-        self.reports_menu.add_command(label = "Trending Report", command = reports.trending_report)
-        self.reports_menu.add_command(label = "Final Report", command = reports.final_report)
+        # animate atrium
+        self.reports_menu.add_command(label = "Atrium Electrogram", command = lambda: egram().animate_atr(0))
+
 
     def hide_menubar(self):
         """Hides the menubar on the master frame. 
