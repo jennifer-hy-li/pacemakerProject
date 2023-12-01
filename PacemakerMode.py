@@ -1,7 +1,7 @@
 import tkinter as tk
 from database.PacemakerDatabase import *
 from account.LoginPage import *
-import SerialCommunication
+#import SerialCommunication
 
 
 db = PacemakerDatabase.get_instance()
@@ -132,13 +132,13 @@ class AOO(ParameterProcess,tk.Frame):
             #print("self parameter tuplesss", self.parameter_tuples)
             #print("saved valyh", saved_value)
 
-            SerialCommunication.set_parameters(MODE =1, LRL=saved_value[3][3],URL = saved_value[2][3],ATR_AMP= saved_value[0][3],ATR_PW=saved_value[1][3])
+           #SerialCommunication.set_parameters(MODE =1, LRL=saved_value[3][3],URL = saved_value[2][3],ATR_AMP= saved_value[0][3],ATR_PW=saved_value[1][3])
             row += 1
             i+=1
         
         save_button = tk.Button(self, text="Save", command=lambda pt=self.parameter_tuples, mode="AOO": ParameterProcess.save_parameters(pt, mode))
         save_button.grid(row=row, column=0, padx=(300, 50), pady=(20, 0))
-        SerialCommunication.set_parameters(MODE =1, LRL=saved_value[3][3],URL = saved_value[2][3],ATR_AMP= saved_value[0][3],ATR_PW=saved_value[1][3])
+        #SerialCommunication.set_parameters(MODE =1, LRL=saved_value[3][3],URL = saved_value[2][3],ATR_AMP= saved_value[0][3],ATR_PW=saved_value[1][3])
 
         tk.Label(self, text="Device:", font=('Arial', 10)).grid(row=30, column=0, padx=(0, 550), pady=(140, 0))
         tk.Label(self, text="[Show status + Device ID]", font=('Arial', 9)).grid(row=31, column=0, padx=(0, 450), pady=(0, 0))
@@ -377,7 +377,7 @@ class AOOR(ParameterProcess,tk.Frame):
         super().__init__(parent)
         
         tk.Label(self, text="Mode: AOOR", font = ('Arial',23)).grid(row = 1, column=0, padx=(50,0))
-        tk.Label(self, text="Atrium Paced | No chamber sensed | No response to sensing ", 
+        tk.Label(self, text="Atrium Paced | No chamber sensed | No response to sensing| Rate modulation ", 
                  font = ('Arial',12)).grid(row=2,column=0,padx=(50,0),pady=(0,10))
         
         """Check if the user has any saved parameters
@@ -459,7 +459,7 @@ class VOOR(ParameterProcess,tk.Frame):
         super().__init__(parent)
         
         tk.Label(self, text="Mode: VOOR", font = ('Arial',23)).grid(row = 1, column=0, padx=(50,0))
-        tk.Label(self, text="Atrium Paced | No chamber sensed | No response to sensing ", 
+        tk.Label(self, text="Ventricle Paced | No chamber sensed | No response to sensing | Rate modulation", 
                  font = ('Arial',12)).grid(row=2,column=0,padx=(50,0),pady=(0,10))
         
         """Check if the user has any saved parameters
@@ -540,7 +540,7 @@ class AAIR(ParameterProcess,tk.Frame):
         super().__init__(parent)
         
         tk.Label(self, text="Mode: AAIR", font = ('Arial',23)).grid(row = 1, column=0, padx=(50,0))
-        tk.Label(self, text="Atrium Paced | No chamber sensed | No response to sensing ", 
+        tk.Label(self, text="Atrium Paced | Atrium chambers | Inhibited response to sensing | Rate modulation ", 
                  font = ('Arial',12)).grid(row=2,column=0,padx=(50,0),pady=(0,10))
         
         """Check if the user has any saved parameters
@@ -621,7 +621,7 @@ class VVIR(ParameterProcess,tk.Frame):
         super().__init__(parent)
         
         tk.Label(self, text="Mode: VVIR", font = ('Arial',23)).grid(row = 1, column=0, padx=(50,0))
-        tk.Label(self, text="Atrium Paced | No chamber sensed | No response to sensing ", 
+        tk.Label(self, text="Ventricle Paced | Ventricle chamber | Inhibited response to sensing | Rate modulation ", 
                  font = ('Arial',12)).grid(row=2,column=0,padx=(50,0),pady=(0,10))
         
         """Check if the user has any saved parameters
