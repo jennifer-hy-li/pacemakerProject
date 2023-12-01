@@ -2,7 +2,7 @@ import tkinter as tk
 import future_utility.UtilityFunctions as util
 import future_utility.PrintedReports as reports
 from account.LoginPage import *
-from PacemakerMode import AOO,VOO,AAI,VVI
+from PacemakerMode import *
 from database.PacemakerDatabase import *
 
 class MainWindow():
@@ -111,6 +111,7 @@ class Home(tk.Frame):
     
     def submit(self, selected_mode, parent):
         """Auxiliary function for the options pane to change the frame to the submitted option."""
+        print(selected_mode)
         if   selected_mode == "AOO":
             AOO(parent)
         elif selected_mode == "VOO":
@@ -119,6 +120,15 @@ class Home(tk.Frame):
             AAI(parent)
         elif selected_mode == "VVI":
             VVI(parent)
+        elif selected_mode == "AOOR":
+            AOOR(parent)
+        elif selected_mode == "VOOR":
+            VOOR(parent)
+        elif selected_mode == "AAIR":
+            AAIR(parent)
+        elif selected_mode == "VVIR":
+            VVIR(parent)
+        
 
 class SignIn(tk.Frame):
     """Frame to sign a user in, given a username and password."""
