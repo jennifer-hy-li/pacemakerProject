@@ -1,10 +1,10 @@
 import serial
 import struct
 
-def write(port='COM6', baudrate=115200, timeout=0):
+def write(parameters, port='COM6', baudrate=115200, timeout=0):
     # write an array of data
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
-        print("Writing", ser.write(set_parameters(RECEIVE = False, MODE = 3)), "bytes")        
+        print("Writing", ser.write(parameters), "bytes")        
 
 def read(port='COM6', baudrate=115200, timeout=0) -> tuple:
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
@@ -31,13 +31,25 @@ def set_parameters(RECEIVE = True, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 20
     return parameters
 
 if __name__ == '__main__':
-    read()
+    # print(struct.unpack('<BBBHHHffHHHffHHHHHd', ))
+    set_parameters(MODE = 1, LRL = 60, URL = 120, ATR_AMP = 200, ATR_PW = 10)
+    # write(set_parameters(RECEIVE = False, MODE = 3))
 
     # parameters pack translation:
     # uint8 = B
     # uint16 = H
     # single = f
     # double = d
+
+# MODE == 1 -> AOO
+# MODE == 2 -> AII
+# MODE == 3 -> VOO
+# MODE == 4 -> VII
+# MODE == 5 -> AOOR
+# MODE == 6 -> AIIR
+# MODE == 7 -> VOOR
+# MODE == 8 -> VIIR
+
 
 # Using the parameters pack translation, translate following:
 
