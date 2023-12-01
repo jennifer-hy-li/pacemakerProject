@@ -1,7 +1,7 @@
 import tkinter as tk
 from Windows import *
 from database.PacemakerDatabase import *
-from Egram import egram
+from egram import *
 
 def main():
     """The main function is responsible for setting up and running the program."""
