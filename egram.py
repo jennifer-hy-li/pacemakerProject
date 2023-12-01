@@ -14,7 +14,7 @@ class egram():
 
     def animate_signal_helper(self, i, signal_index: int):
         # Read pacemaker signals
-        signals = sc.read()
+        signals = sc.read(RECEIEVE = True)
         signal = signals[signal_index]
 
         # Add x and y to lists
@@ -54,14 +54,11 @@ class egram():
         self.animate_atr(i)
         self.animate_vent(i)
         
-
-
-
-    
+        
 e = egram()
 # ani = animation.FuncAnimation(e.fig, e.animate_atr, interval=50)
 # plt.show()
 
-ani = animation.FuncAnimation(e.fig, e.animate_signals, interval=50)
+ani = animation.FuncAnimation(e.fig, e.animate_vent, interval=50)
 plt.show()
     

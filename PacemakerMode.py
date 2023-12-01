@@ -17,8 +17,7 @@ class ParameterProcess:
         current_value = value_var.get()
         new_value =  round(current_value + 0.1,1)
         value_var.set(new_value)
-
-
+        
 
     def decrement_counter(self,value_var):
         current_value = value_var.get()
