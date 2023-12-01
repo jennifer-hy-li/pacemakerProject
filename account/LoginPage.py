@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import messagebox
 from database.PacemakerDatabase import PacemakerDatabase
 from account.RegisterPage import registerPage
+#from SerialComIndicator import set_global_connection_status
 windowUsername = "[User]"
 
 
@@ -13,6 +14,8 @@ class LoginPage:
     def __init__(self, master):
         self.my_frame = master
         self.user_database = PacemakerDatabase.get_instance()
+
+        #set_global_connection_status(1)
 
          # Define widgets as class attributes
         self.frame = Frame(self.my_frame, width=350, height=350, bg="white")
