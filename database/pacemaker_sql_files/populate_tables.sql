@@ -118,6 +118,3 @@ INSERT INTO modeparameters VALUES ('VVIR', 'Response Factor',69, -1, -1, -1, 0);
 INSERT INTO modeparameters VALUES ('VVIR', 'Recovery Time',70, -1, -1, -1, 0);
 
 
-
-
-

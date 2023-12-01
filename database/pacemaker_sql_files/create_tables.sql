@@ -31,12 +31,12 @@ CREATE TABLE IF NOT EXISTS ModeParameters(
 -- ORDER 2 TABLE --
 CREATE TABLE IF NOT EXISTS AccountParameters(
     username    VARCHAR(50),
-    parameter   VARCHAR(50),
     mode        VARCHAR(50),
+    parameter   VARCHAR(50),
     value       float8, -- match python float
-    PRIMARY KEY (username, parameter, mode),
-    FOREIGN KEY (username)         references Account         ON DELETE RESTRICT ON UPDATE RESTRICT,
-    FOREIGN KEY (parameter, mode)  references ModeParameters ON DELETE RESTRICT ON UPDATE RESTRICT
+    PRIMARY KEY (username, mode, parameter),
+    FOREIGN KEY (username)         references Account        ON DELETE RESTRICT ON UPDATE RESTRICT,
+    FOREIGN KEY (mode, parameter)  references ModeParameters ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 -- Function and Trigger for Account table, limit rows --

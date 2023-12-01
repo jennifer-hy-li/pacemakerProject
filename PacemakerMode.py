@@ -10,6 +10,9 @@ class ParameterProcess:
             value = value_var.get()
             # Process the value (replace this with your processing logic)
             print(f"Processing {parameter_name}: {value}")
+            # Serial communication goes here.
+            # Write to pacemaker the parameters
+            print(getUser(), param_mode, parameter_name, value)
             db.upsert_parameter_value(username = getUser(), mode= param_mode, parameter=parameter_name,value=value)
 
     def increment_counter(self,value_var1,max_val,param,param_increment):
@@ -60,11 +63,13 @@ class AOO(ParameterProcess,tk.Frame):
        Otherwise, use the default values from the modeparam table"""
 
         parameters = db.get_parameters(mode = "AOO")  # 4 parameters assigned to mode AOO
-        saved_value = db.get_parameters(getUser(), "AOO")  # length 4 means theres 4 saved parameters for this user for AOO
+        print(getUser())
+        saved_value = db.get_parameters(username = getUser(), mode = "AOO")  # length 4 means theres 4 saved parameters for this user for AOO
+        print(saved_value)
         # print(parameters)
         # SETS AND SAVES VALUES TO TEXT FIELDS
         
-        parameter_tuples: list(tuple) = []
+        self.parameter_tuples: list(tuple) = []
         parameters_max = []
         parameters_min = []
         parameters_increment =[]
@@ -79,7 +84,7 @@ class AOO(ParameterProcess,tk.Frame):
             #print("param max",parameter_max)
             
             value = tk.DoubleVar()
-
+            print("Check if saved value length matches parameter value length", len(saved_value), len(parameters))
             if len(saved_value) == len(parameters):
                 value.set(saved_value[i][3])
                 #print("saved value:", value)
@@ -87,8 +92,8 @@ class AOO(ParameterProcess,tk.Frame):
                 value.set(default_val)
 
             # print(param[1])
-            parameter_tuples.append((param[1], value))
-            print(parameter_tuples)
+            self.parameter_tuples.append((param[1], value))
+            print(self.parameter_tuples)
 
             label = tk.Label(self, text=f" {param[1]}", font=('Arial', 12))
             label.grid(row=row, column=0, sticky="w", padx=(0, 0))
@@ -96,7 +101,7 @@ class AOO(ParameterProcess,tk.Frame):
             parameters_increment.append(parameters[i][6])
 
             parameters_max.append(parameters[i][5])
-            self.increment_button = tk.Button(self, text="+", command = lambda v =value, i = i: self.increment_counter(v, parameters_max[i],parameter_tuples[i][0],parameters_increment[i]))
+            self.increment_button = tk.Button(self, text="+", command = lambda v =value, i = i: self.increment_counter(v, parameters_max[i],self.parameter_tuples[i][0],parameters_increment[i]))
             self.increment_button.grid(row=row, column=0, padx=(100, 0)) 
 
             num = tk.Label(self, textvariable=value, font=('Arial', 16))
@@ -122,7 +127,7 @@ class AOO(ParameterProcess,tk.Frame):
 
     def save_parameters(self):
         # Save all processed parameters
-        parameters_to_save = [(param_name, value_var) for param_name, value_var in self.parameter_values.items()]
+        parameters_to_save = [(param_name, value_var) for param_name, value_var in self.parameter_tuples]
         ParameterProcess.process_parameter(parameters_to_save, "AOO")
         print("Parameters saved.")
 
