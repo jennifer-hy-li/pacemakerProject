@@ -12,27 +12,36 @@ class ParameterProcess:
             print(f"Processing {parameter_name}: {value}")
             db.upsert_parameter_value(username = getUser(), mode= param_mode, parameter=parameter_name,value=value)
 
-    def increment_counter(self,value_var1,max_val):
+    def increment_counter(self,value_var1,max_val,param,param_increment):
         current_value1 = value_var1.get()
         print("current value:", current_value1)
-        print("max_val:",max_val)
-        if(parameter == "LRL"):
-            pass
+        #print("max_val:",max_val)
+        print(param)
+        if((param == "Lower Rate Limit") and (50<=current_value1<90)):
+            increment_val = 1
         else:
-            if current_value1 < max_val:
-                new_value_increment =  round(current_value1 + 0.1,1) # query from database
-                print("incrementing",new_value_increment)
-            else:
-                new_value_increment =  round(current_value1,1)
-                print("decrementing:",new_value_increment)
-            value_var1.set(new_value_increment)
+            increment_val = param_increment
 
-    def decrement_counter(self,value_var2,min_val):
+        if current_value1 < max_val:
+            new_value_increment =  round(current_value1 + increment_val,1) # query from database
+            #print("incrementing",new_value_increment)
+        else:
+            messagebox.showinfo('Inavlid', 'Trying to go outside of range')
+            new_value_increment =  round(current_value1,1)
+            print("decrementing:",new_value_increment)
+        value_var1.set(new_value_increment)
+
+    def decrement_counter(self,value_var2,min_val,param2,param_increment2):
         current_value2 = value_var2.get()
+        if((param2 == "Lower Rate Limit") and (50<=current_value2<90)):
+            increment_val = 1
+        else:
+            increment_val = param_increment2
 
         if current_value2>min_val:
-            new_value_decrement =  round(current_value2 - 0.1,1)
+            new_value_decrement =  round(current_value2 - increment_val,1)
         else:
+            messagebox.showinfo('Inavlid', 'Trying to go outside of range')
             new_value_decrement = round(current_value2,1)
         value_var2.set(new_value_decrement)
     
@@ -55,16 +64,16 @@ class AOO(ParameterProcess,tk.Frame):
         # print(parameters)
         # SETS AND SAVES VALUES TO TEXT FIELDS
         
-
         parameter_tuples: list(tuple) = []
         parameters_max = []
         parameters_min = []
+        parameters_increment =[]
         i=0
         row = 5
         for param in parameters:
             
             #parameters= db.get_modes_from_modeparameters()
-            print(parameters[i])
+            #print(parameters[i])
             default_val = parameters[i][3]
             
             #print("param max",parameter_max)
@@ -77,22 +86,25 @@ class AOO(ParameterProcess,tk.Frame):
             else: 
                 value.set(default_val)
 
-
             # print(param[1])
             parameter_tuples.append((param[1], value))
+            print(parameter_tuples)
 
             label = tk.Label(self, text=f" {param[1]}", font=('Arial', 12))
             label.grid(row=row, column=0, sticky="w", padx=(0, 0))
     
+            parameters_increment.append(parameters[i][6])
+
             parameters_max.append(parameters[i][5])
-            self.increment_button = tk.Button(self, text="+", command = lambda v =value, i = i: self.increment_counter(v, parameters_max[i]))
+            self.increment_button = tk.Button(self, text="+", command = lambda v =value, i = i: self.increment_counter(v, parameters_max[i],parameter_tuples[i][0],parameters_increment[i]))
             self.increment_button.grid(row=row, column=0, padx=(100, 0)) 
 
             num = tk.Label(self, textvariable=value, font=('Arial', 16))
             num.grid(row=row, column=0, padx=(20, 20))   # Adjusted column for the label
 
+        
             parameters_min.append(parameters[i][4])
-            self.decrement_button = tk.Button(self, text="-", command = lambda v = value, i = i: self.decrement_counter(v, parameters_min[i]))
+            self.decrement_button = tk.Button(self, text="-", command = lambda v = value, i = i,mode="AOO",j=i: self.decrement_counter(v, parameters_min[i],mode,parameters_increment[j]))
             self.decrement_button.grid(row=row, column=0, padx=(0, 100)) 
             # Add a button for each parameter
             process_button = tk.Button(self, text=f"Process", command=lambda p=param[1], v=value,m="AOO": ParameterProcess.process_parameter([(p,v)],m))
