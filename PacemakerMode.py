@@ -45,24 +45,22 @@ class AOO(ParameterProcess,tk.Frame):
         # Create Entry widgets for parameters
         self.param_entries = {}
         self.parameter_values = {}
-        
+
         parameters = db.get_parameters(mode ="AOO")
         parameter_tuples: list(tuple) = []
         i=0
-        j =0
-
-        for param in parameters:
-            modeparam_table= db.get_modes_from_modeparameters()
-            parameter_max =modeparam_table[j][5]
-            parameter_min = modeparam_table[j][4]
-            default_val = modeparam_table[j][3]
-            #print("param max",parameter_max)
-            #print("param min",parameter_min)
-            #print("default",default_val)   
-            j+=1
-
+        
+        modeparam_table= db.get_modes_from_modeparameters()
         print(parameters)
         for param in parameters:
+            
+            #modeparam_table= db.get_modes_from_modeparameters()
+            parameter_max =modeparam_table[i][5]
+            parameter_min = modeparam_table[i][4]
+            default_val = modeparam_table[i][3]
+            
+            #print("param max",parameter_max)
+            
             value = tk.DoubleVar()
             saved_value = db.get_all_account_parameters(getUser())
             default_val = modeparam_table[i][3]
@@ -80,6 +78,7 @@ class AOO(ParameterProcess,tk.Frame):
         for parameter_name, value_var in parameter_tuples:
             label = tk.Label(self, text=f" {parameter_name}", font=('Arial', 12))
             label.grid(row=row, column=0, sticky="w", padx=(0, 0))
+    
             
             self.increment_button = tk.Button(self, text="+", command= lambda v =value_var: self.increment_counter(v,parameter_max))
             self.increment_button.grid(row=row, column=0, padx=(100, 0)) 
