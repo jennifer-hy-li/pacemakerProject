@@ -92,8 +92,8 @@ class AOO(ParameterProcess,tk.Frame):
                 value.set(default_val)
 
             # print(param[1])
-            self.parameter_tuples.append((param[1], value))
-            print(self.parameter_tuples)
+            self.parameter_tuples.append((saved_value[i][2], value))
+            print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
 
             label = tk.Label(self, text=f" {param[1]}", font=('Arial', 12))
             label.grid(row=row, column=0, sticky="w", padx=(0, 0))
