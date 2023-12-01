@@ -1,6 +1,7 @@
 import tkinter as tk
 from database.PacemakerDatabase import *
 from account.LoginPage import *
+import SerialCommunication as sc
 
 db = PacemakerDatabase.get_instance()
 class ParameterProcess:
@@ -132,6 +133,14 @@ class AOO(ParameterProcess,tk.Frame):
         parameters_to_save = [(param_name, value_var) for param_name, value_var in self.parameter_tuples]
         print(parameters_to_save)
         ParameterProcess.process_parameter(parameters_to_save, "AOO")
+        # query each parameter from database
+        LRL = db.get_value(username = getUser(), mode = "AOO", parameter="Lower Rate Limit")
+        URL = db.get_value(username = getUser(), mode = "AOO", parameter="Upper Rate Limit")
+        ATR_PW = db.get_value(username = getUser(), mode = "AOO", parameter="Atrial Pulse Width")
+        ATR_AMP = db.get_value(username = getUser(), mode = "AOO", parameter="Atrial Amplitude")
+
+        # send corresponding parameters to pacemaker
+        sc.write(sc.set_parameters(MODE = 1, LRL = int(LRL), URL = int(URL), ATR_PW = int(ATR_PW), ATR_AMP = float(ATR_AMP)))
         print("Parameters saved.")
 
 
