@@ -4,7 +4,6 @@ from account.LoginPage import *
 
 db = PacemakerDatabase.get_instance()
 class ParameterProcess:
-    @staticmethod
     def process_parameter(parameters,param_mode:str):
         for parameter_name,value_var in parameters:
             # Retrieve the input value for the specified parameter
@@ -13,17 +12,26 @@ class ParameterProcess:
             print(f"Processing {parameter_name}: {value}")
             db.upsert_parameter_value(username = getUser(), mode= param_mode, parameter=parameter_name,value=value)
 
-    def increment_counter(self,value_var):
-        current_value = value_var.get()
-        new_value =  round(current_value + 0.1,1)
-        value_var.set(new_value)
+    def increment_counter(self,value_var1,max_val):
+        current_value1 = value_var1.get()
+        print("current value:", current_value1)
+        print("max_val:",max_val)
+        if current_value1 < max_val:
+            new_value_increment =  round(current_value1 + 0.1,1)
+            print("incrementing",new_value_increment)
+        else:
+            new_value_increment =  round(current_value1,1)
+            print("decrementing:",new_value_increment)
+        value_var1.set(new_value_increment)
 
+    def decrement_counter(self,value_var2,min_val):
+        current_value2 = value_var2.get()
 
-
-    def decrement_counter(self,value_var):
-        current_value = value_var.get()
-        new_value = round(current_value - 0.1,1)
-        value_var.set(new_value)
+        if current_value2>min_val:
+            new_value_decrement =  round(current_value2 - 0.1,1)
+        else:
+            new_value_decrement = round(current_value2,1)
+        value_var2.set(new_value_decrement)
     
 
 class AOO(ParameterProcess,tk.Frame):
@@ -41,33 +49,45 @@ class AOO(ParameterProcess,tk.Frame):
         parameters = db.get_parameters(mode ="AOO")
         parameter_tuples: list(tuple) = []
         i=0
+        j =0
+
+        for param in parameters:
+            modeparam_table= db.get_modes_from_modeparameters()
+            parameter_max =modeparam_table[j][5]
+            parameter_min = modeparam_table[j][4]
+            default_val = modeparam_table[j][3]
+            #print("param max",parameter_max)
+            #print("param min",parameter_min)
+            #print("default",default_val)   
+            j+=1
+
+        print(parameters)
         for param in parameters:
             value = tk.DoubleVar()
             saved_value = db.get_all_account_parameters(getUser())
-            print(saved_value)
-           # saved_value.sort(key = lambda x:x[1])
-            
-            if saved_value is not None:
+            default_val = modeparam_table[i][3]
+            if saved_value is not None and len(saved_value)>0 and i<len(saved_value):
                 value.set(saved_value[i][3])
-                i+=1
-            #print(param[2])
+                #print("saved value:", value)
+            else: 
+                value.set(default_val)
+            i+=1
+            print(param[1])
             parameter_tuples.append((param[1], value))
         
-    
 
-        
         row = 5  # Starting row for parameters
         for parameter_name, value_var in parameter_tuples:
             label = tk.Label(self, text=f" {parameter_name}", font=('Arial', 12))
             label.grid(row=row, column=0, sticky="w", padx=(0, 0))
             
-            self.increment_button = tk.Button(self, text="+", command= lambda v =value_var: self.increment_counter(v))
+            self.increment_button = tk.Button(self, text="+", command= lambda v =value_var: self.increment_counter(v,parameter_max))
             self.increment_button.grid(row=row, column=0, padx=(100, 0)) 
 
             num = tk.Label(self, textvariable=value_var, font=('Arial', 16))
             num.grid(row=row, column=0, padx=(20, 20))   # Adjusted column for the label
 
-            self.decrement_button = tk.Button(self, text="-", command=lambda v= value_var: self.decrement_counter(v))
+            self.decrement_button = tk.Button(self, text="-", command=lambda v= value_var: self.decrement_counter(v,parameter_min))
             self.decrement_button.grid(row=row, column=0, padx=(0, 100)) 
             # Add a button for each parameter
             process_button = tk.Button(self, text=f"Process", command=lambda p=parameter_name, v=value_var,m="AOO": ParameterProcess.process_parameter([(p,v)],m))
@@ -193,4 +213,3 @@ class VVI(tk.Frame):
         tk.Label(self, text="[Show status + Device ID]",font = ('Arial',9)).grid(row = 31, column=0, padx=(0,450),pady=(0,0))
 
         self.pack()
-

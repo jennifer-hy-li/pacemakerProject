@@ -17,9 +17,11 @@ CREATE TABLE IF NOT EXISTS Mode (
 CREATE TABLE IF NOT EXISTS ModeParameters(
     mode            VARCHAR(50),
     parameter       VARCHAR(50),
+    orderVal        float8,
     defaultValue    float8, -- match python float
     minValue        float8,
     maxValue        float8,
+    incrementValue  float8,
     PRIMARY KEY (mode, parameter),
     -- safety critical systems should be very strict when deleting or updating modes and parameters.
     FOREIGN KEY (parameter)  references Parameters ON DELETE RESTRICT ON UPDATE RESTRICT,
