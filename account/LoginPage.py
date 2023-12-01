@@ -98,6 +98,7 @@ class LoginPage:
                 
                 global windowUsername
                 windowUsername = username
+                #set_global_connection_status(0)
                
                 self.frame.quit()
                 self.my_frame.destroy()
