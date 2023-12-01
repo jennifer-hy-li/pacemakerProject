@@ -17,9 +17,11 @@ CREATE TABLE IF NOT EXISTS Mode (
 CREATE TABLE IF NOT EXISTS ModeParameters(
     mode            VARCHAR(50),
     parameter       VARCHAR(50),
+    orderVal        float8,
     defaultValue    float8, -- match python float
     minValue        float8,
     maxValue        float8,
+    incrementValue  float8,
     PRIMARY KEY (mode, parameter),
     -- safety critical systems should be very strict when deleting or updating modes and parameters.
     FOREIGN KEY (parameter)  references Parameters ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -29,12 +31,12 @@ CREATE TABLE IF NOT EXISTS ModeParameters(
 -- ORDER 2 TABLE --
 CREATE TABLE IF NOT EXISTS AccountParameters(
     username    VARCHAR(50),
-    parameter   VARCHAR(50),
     mode        VARCHAR(50),
+    parameter   VARCHAR(50),
     value       float8, -- match python float
-    PRIMARY KEY (username, parameter, mode),
-    FOREIGN KEY (username)         references Account         ON DELETE RESTRICT ON UPDATE RESTRICT,
-    FOREIGN KEY (parameter, mode)  references ModeParameters ON DELETE RESTRICT ON UPDATE RESTRICT
+    PRIMARY KEY (username, mode, parameter),
+    FOREIGN KEY (username)         references Account        ON DELETE RESTRICT ON UPDATE RESTRICT,
+    FOREIGN KEY (mode, parameter)  references ModeParameters ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 -- Function and Trigger for Account table, limit rows --

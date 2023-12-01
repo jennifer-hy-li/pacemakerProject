@@ -40,6 +40,16 @@ if __name__ == '__main__':
     # single = f
     # double = d
 
+# MODE == 1 -> AOO
+# MODE == 2 -> AII
+# MODE == 3 -> VOO
+# MODE == 4 -> VII
+# MODE == 5 -> AOOR
+# MODE == 6 -> AIIR
+# MODE == 7 -> VOOR
+# MODE == 8 -> VIIR
+
+
 # Using the parameters pack translation, translate following:
 
 # MODE = typecast(Rx(3),'uint8');

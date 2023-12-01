@@ -1,1 +1,5 @@
 /__pycache__/
+*.pyc
+*.pyc
+account/__pycache__/LoginPage.cpython-310.pyc
+account/__pycache__/RegisterPage.cpython-310.pyc

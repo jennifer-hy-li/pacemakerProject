@@ -6,6 +6,8 @@ from account.LoginPage import *
 from PacemakerMode import AOO,VOO,AAI,VVI
 from database.PacemakerDatabase import *
 
+connection_status =0
+
 class MainWindow():
     """The MainWindow is responsible for holding subframes. 
     This class allows frames to be created and destroyed, 
@@ -19,6 +21,7 @@ class MainWindow():
         master.title("Pacemaker v0 0.1.0")
 
         self.add_menubar()
+        self.serial_com_indicator()
 
         # Initial frame
         SignIn(mainframe)
@@ -57,6 +60,37 @@ class MainWindow():
     def show_menubar(self):
         """Shows the menubar on the master frame."""
         self.master.config(menu = self.menubar)
+    def serial_com_indicator(self):
+        #initial display
+        connection_label = tk.Label(self.master, text="Pacemaker Disconnected")
+        connection_label.pack(pady=10, side=LEFT)
+
+        canvas = tk.Canvas(self.master, width=20, height=20)
+        canvas.pack(side=LEFT)
+
+        
+        def check_connection():
+            global connection_status
+            if connection_status:
+                connection_label.config(text="Pacemaker Connected", fg="green")
+                update_circle("green")
+            else:
+                connection_label.config(text="Pacemaker Disconnected", fg="red")
+                update_circle("red")  
+
+            check_connection.connection_status = connection_status
+            self.master.after(1000, check_connection)
+        def update_circle(color):
+            canvas.delete("connection_circle")  # Delete existing circles
+
+            x1, y1, x2, y2 = 2, 2, 18, 18
+
+            # Draw the circle
+            canvas.create_oval(x1, y1, x2, y2, fill=color, tags="connection_circle")
+        self.master.after(0, check_connection)#repeatedly checks for connection
+        
+
+
         
 
 class Home(tk.Frame):
@@ -127,9 +161,16 @@ class SignIn(tk.Frame):
         signInWindow.pack()
         self.pack(padx=0,pady=0)
 
-        Loginpage(self) # self passed into Loginpage as root window
-        self.destroy()
+        #Loginpage(self) # self passed into Loginpage as root window
+        login_page = LoginPage(self)
+
+        
+        global connection_status
+        connection_status=1
+        
         Home(parent)
+        
+            
 
 # --------- Helper functions ---------- #
 
