@@ -6,7 +6,7 @@ import SerialCommunication as sc
 db = PacemakerDatabase.get_instance()
 class ParameterProcess:
     def process_parameter(parameters,param_mode:str):
-        for parameter_name,value_var in parameters:
+        for parameter_name, value_var in parameters:
             # Retrieve the input value for the specified parameter
             value = value_var.get()
             # Process the value (replace this with your processing logic)
@@ -14,7 +14,7 @@ class ParameterProcess:
             # Serial communication goes here.
             # Write to pacemaker the parameters
             print(getUser(), param_mode, parameter_name, value)
-            db.upsert_parameter_value(username = getUser(), mode= param_mode, parameter=parameter_name,value=value)
+            db.upsert_parameter_value(username = getUser(), mode = param_mode, parameter = parameter_name, value = value)
 
     def increment_counter(self,value_var1,max_val,param,param_increment):
         current_value1 = value_var1.get()
@@ -90,7 +90,7 @@ class AOO(ParameterProcess,tk.Frame):
 
                 print(data)
                 value.set(data[3])
-                self.parameter_tuples.append((data[0], value)) # (parameter_name, value_var)
+                self.parameter_tuples.append((data[2], value)) # (parameter_name, value_var)
                 print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
             else: 
                 value.set(default_val)
@@ -184,7 +184,7 @@ class VOO(ParameterProcess,tk.Frame):
 
                 print(data)
                 value.set(data[3])
-                self.parameter_tuples.append((data[0], value)) # (parameter_name, value_var)
+                self.parameter_tuples.append((data[2], value)) # (parameter_name, value_var)
                 print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
             else: 
                 value.set(default_val)
@@ -270,7 +270,7 @@ class AAI(ParameterProcess,tk.Frame):
 
                 print(data)
                 value.set(data[3])
-                self.parameter_tuples.append((data[0], value)) # (parameter_name, value_var)
+                self.parameter_tuples.append((data[2], value)) # (parameter_name, value_var)
                 print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
             else: 
                 value.set(default_val)
@@ -340,7 +340,7 @@ class VVI(ParameterProcess,tk.Frame):
         i=0
         row = 5
         for param in parameters:
-            
+            print("param",param)
             #parameters= db.get_modes_from_modeparameters()
             #print(parameters[i])
             default_val = parameters[i][3]
@@ -348,15 +348,15 @@ class VVI(ParameterProcess,tk.Frame):
             #print("param max",parameter_max)
             
             value = tk.DoubleVar()
-            print("Check if saved value length matches parameter value length", len(saved_value), len(parameters))
+            # print("Check if saved value length matches parameter value length", len(saved_value), len(parameters))
             if len(saved_value) == len(parameters) and len(saved_value) != 0:
                 
                 data = db.get_parameters(username = getUser(), mode = "VVI", parameter = param[1])[0]
 
-                print(data)
+                # print(data)
                 value.set(data[3])
-                self.parameter_tuples.append((data[0], value)) # (parameter_name, value_var)
-                print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
+                self.parameter_tuples.append((data[2], value)) # (parameter_name, value_var)
+                # print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
             else: 
                 value.set(default_val)
                 self.parameter_tuples.append((param[1], value)) # (parameter_name, value_var)
@@ -442,7 +442,7 @@ class AOOR(ParameterProcess,tk.Frame):
 
                 print(data)
                 value.set(data[3])
-                self.parameter_tuples.append((data[0], value)) # (parameter_name, value_var)
+                self.parameter_tuples.append((data[2], value)) # (parameter_name, value_var)
                 print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
             else: 
                 value.set(default_val)
@@ -528,7 +528,7 @@ class VOOR(ParameterProcess,tk.Frame):
 
                 print(data)
                 value.set(data[3])
-                self.parameter_tuples.append((data[0], value)) # (parameter_name, value_var)
+                self.parameter_tuples.append((data[2], value)) # (parameter_name, value_var)
                 print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
             else: 
                 value.set(default_val)
@@ -614,7 +614,7 @@ class AAIR(ParameterProcess,tk.Frame):
 
                 print(data)
                 value.set(data[3])
-                self.parameter_tuples.append((data[0], value)) # (parameter_name, value_var)
+                self.parameter_tuples.append((data[2], value)) # (parameter_name, value_var)
                 print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
             else: 
                 value.set(default_val)
@@ -700,7 +700,7 @@ class VVIR(ParameterProcess,tk.Frame):
 
                 print(data)
                 value.set(data[3])
-                self.parameter_tuples.append((data[0], value)) # (parameter_name, value_var)
+                self.parameter_tuples.append((data[2], value)) # (parameter_name, value_var)
                 print(self.parameter_tuples[i][0], self.parameter_tuples[i][1].get())
             else: 
                 value.set(default_val)
