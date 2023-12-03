@@ -203,6 +203,20 @@ class PacemakerDatabase():
         finally:
             self.close_connection()
 
+    def get_value(self, username: str, mode: str, parameter: str):
+        """Gets the values of a particular parameter for a given user and mode."""
+        try:
+            self.make_connection()
+            self.cursor.execute(f"SELECT  value\
+                                FROM    accountparameters\
+                                WHERE   username = '{username}' and mode = '{mode}' \
+                                        and parameter = '{parameter}';")
+            return self.cursor.fetchone()[0]
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+
     def get_parameters(self, username: str = None, mode: str = None, parameter: str = None):
         """Gets the tuples (username, mode, parameter, values) 
         where the optional parameters match in the database."""        

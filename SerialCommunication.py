@@ -31,8 +31,9 @@ def set_parameters(RECEIVE = False, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 2
     return parameters
 
 if __name__ == '__main__':
-    # write(set_parameters(MODE = 1))
-    print(read())
+    # print(struct.unpack('<BBBHHHffHHHffHHHHHd', ))
+    # set_parameters(MODE = 1, LRL = 60, URL = 120, ATR_AMP = 200, ATR_PW = 10)
+    write(set_parameters(RECEIVE = False, MODE = 3))
 
     # parameters pack translation:
     # uint8 = B
