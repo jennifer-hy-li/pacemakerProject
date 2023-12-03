@@ -49,6 +49,12 @@ class ParameterProcess:
             new_value_decrement = round(current_value2,1)
         value_var2.set(new_value_decrement)
     
+    def save_parameters(self, param_tuple, mode: str):
+        # Save all processed parameters
+        parameters_to_save = [(param_name, value_var) for param_name, value_var in param_tuple]
+        print(parameters_to_save)
+        ParameterProcess.process_parameter(parameters_to_save, mode)
+        print("Parameters saved.")
 
 class AOO(ParameterProcess,tk.Frame):
     
@@ -58,6 +64,8 @@ class AOO(ParameterProcess,tk.Frame):
         tk.Label(self, text="Mode: AOO", font = ('Arial',23)).grid(row = 1, column=0, padx=(50,0))
         tk.Label(self, text="Atrium Paced | No chamber sensed | No response to sensing ", 
                  font = ('Arial',12)).grid(row=2,column=0,padx=(50,0),pady=(0,10))
+        
+        self.mode = "AOO"
         
         """Check if the user has any saved parameters
        If so, use those values as the default values
@@ -120,7 +128,7 @@ class AOO(ParameterProcess,tk.Frame):
             row += 1
             i+=1
         
-        save_button = tk.Button(self, text="Save", command=self.save_parameters)
+        save_button = tk.Button(self, text="Save", command = lambda p=self.parameter_tuples, m=self.mode: self.save_parameters(p,m))
         save_button.grid(row=row, column=0, padx=(300, 50), pady=(20, 0))
 
         tk.Label(self, text="Device:", font=('Arial', 10)).grid(row=30, column=0, padx=(0, 550), pady=(140, 0))
@@ -128,20 +136,20 @@ class AOO(ParameterProcess,tk.Frame):
 
         self.pack()
 
-    def save_parameters(self):
-        # Save all processed parameters
-        parameters_to_save = [(param_name, value_var) for param_name, value_var in self.parameter_tuples]
-        print(parameters_to_save)
-        ParameterProcess.process_parameter(parameters_to_save, "AOO")
-        # query each parameter from database
-        LRL = db.get_value(username = getUser(), mode = "AOO", parameter="Lower Rate Limit")
-        URL = db.get_value(username = getUser(), mode = "AOO", parameter="Upper Rate Limit")
-        ATR_PW = db.get_value(username = getUser(), mode = "AOO", parameter="Atrial Pulse Width")
-        ATR_AMP = db.get_value(username = getUser(), mode = "AOO", parameter="Atrial Amplitude")
+    # def save_parameters(self):
+    #     # Save all processed parameters
+    #     parameters_to_save = [(param_name, value_var) for param_name, value_var in self.parameter_tuples]
+    #     print(parameters_to_save)
+    #     ParameterProcess.process_parameter(parameters_to_save, "AOO")
+    #     # query each parameter from database
+    #     LRL = db.get_value(username = getUser(), mode = "AOO", parameter="Lower Rate Limit")
+    #     URL = db.get_value(username = getUser(), mode = "AOO", parameter="Upper Rate Limit")
+    #     ATR_PW = db.get_value(username = getUser(), mode = "AOO", parameter="Atrial Pulse Width")
+    #     ATR_AMP = db.get_value(username = getUser(), mode = "AOO", parameter="Atrial Amplitude")
 
-        # send corresponding parameters to pacemaker
-        sc.write(sc.set_parameters(MODE = 1, LRL = int(LRL), URL = int(URL), ATR_PW = int(ATR_PW), ATR_AMP = float(ATR_AMP)))
-        print("Parameters saved.")
+    #     # send corresponding parameters to pacemaker
+    #     sc.write(sc.set_parameters(MODE = 1, LRL = int(LRL), URL = int(URL), ATR_PW = int(ATR_PW), ATR_AMP = float(ATR_AMP)))
+    #     print("Parameters saved.")
 
 
 class VOO(ParameterProcess,tk.Frame):
