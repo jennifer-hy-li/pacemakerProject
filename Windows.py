@@ -1,9 +1,11 @@
 import tkinter as tk
 import future_utility.UtilityFunctions as util
 import future_utility.PrintedReports as reports
+from egram import *
 from account.LoginPage import *
 from PacemakerMode import *
 from database.PacemakerDatabase import *
+from SerialComIndicator import *
 
 class MainWindow():
     """The MainWindow is responsible for holding subframes. 
@@ -17,10 +19,41 @@ class MainWindow():
         mainframe.pack(fill='both', expand=1)
         master.title("Pacemaker v0 0.1.0")
 
+        self.e = egram()
+
         self.add_menubar()
+
+        indicator=indicateConnection("red","Pacemaker Disconnected")
+
+         #initial display, serial com indicator
+        connection_label = tk.Label(self.master, text=indicator.connectionLabel, fg=indicator.Color)
+        connection_label.pack(pady=10, side=LEFT)
+
+        canvas = tk.Canvas(self.master, width=20, height=20)
+        canvas.create_oval(2, 2, 18, 18, fill=indicator.Color, tags="connection_circle")
+        canvas.pack(side=LEFT)
+        def update():
+            connection_label.config(text=indicator.connectionLabel, fg=indicator.Color)
+            canvas.delete("connection_circle")
+            canvas.create_oval(2,2,18,18, fill=indicator.Color, tags="connection_circle")
+
+        # self.master.after(100, indicator.check_connection)#repeatedly checks for connection
+        # self.master.after(100, update)
+
+        # set_global_connection_status(1)
+        # Set up periodic check for the indicator
+        self.check_indicator(indicator, update)
 
         # Initial frame
         SignIn(mainframe)
+
+    def check_indicator(self, indicator, update_function):
+        # Check the indicator every 1000 milliseconds (1 second)
+        self.master.after(1000, self.check_indicator, indicator, update_function)
+
+        # Perform the indicator check and update
+        indicator.check_connection()
+        update_function()
 
     def add_menubar(self):
         """Adds the menubar to the master frame. This provides options such as File, Settings, and Reports menus."""
@@ -42,16 +75,10 @@ class MainWindow():
         # add Reports to menubar
         self.reports_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
         self.menubar.add_cascade(menu = self.reports_menu, label = "Reports")
-        self.reports_menu.add_command(label = "Bradycardia Parameters", command = reports.bradycardia_parameters_report)
-        self.reports_menu.add_command(label = "Temporary Parameters", command = reports.temporary_parameters_report)
-        self.reports_menu.add_command(label = "Implant Data", command = reports.implant_data_report)
-        self.reports_menu.add_command(label = "Threshold Test Results", command = reports.threshold_test_results_report)
-        self.reports_menu.add_command(label = "Measured Data", command = reports.measured_data_report)
-        self.reports_menu.add_command(label = "Marker Legend", command = reports.marker_legend_report)
-        self.reports_menu.add_command(label = "Rate Histogram", command = reports.rate_histogram_report)
-        self.reports_menu.add_command(label = "Threshold Test Results", command = reports.threshold_test_results_report)
-        self.reports_menu.add_command(label = "Trending Report", command = reports.trending_report)
-        self.reports_menu.add_command(label = "Final Report", command = reports.final_report)
+
+        self.reports_menu.add_command(label = "Atrium Electrogram", command = lambda: self.e.display_atr_egram())
+        self.reports_menu.add_command(label = "Ventricle Electrogram", command = lambda: self.e.display_vent_egram())
+
 
     def hide_menubar(self):
         """Hides the menubar on the master frame. 
@@ -61,6 +88,10 @@ class MainWindow():
     def show_menubar(self):
         """Shows the menubar on the master frame."""
         self.master.config(menu = self.menubar)
+
+        
+
+
         
 
 class Home(tk.Frame):
@@ -143,6 +174,8 @@ class SignIn(tk.Frame):
 
         #Loginpage(self) # self passed into Loginpage as root window
         login_page = LoginPage(self)
+
+        
         
         Home(parent)
         

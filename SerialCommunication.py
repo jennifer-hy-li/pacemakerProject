@@ -15,7 +15,7 @@ def read(port='COM6', baudrate=115200, timeout=0) -> tuple:
         unpacked_signals = struct.unpack('<dd', read_data)
         return unpacked_signals
 
-def set_parameters(RECEIVE = True, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 200, 
+def set_parameters(RECEIVE = False, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 200, 
                    ATR_AMP = 3.5, VENT_AMP = 3.5, VRP_DELAY = 200, 
                    ATR_PW = 10, VENT_PW = 10, ATR_SENSE = 80, 
                    VENT_SENSE = 80, VARP = 150, MAX_SR = 120,

@@ -16,7 +16,7 @@ class ParameterProcess:
             print(getUser(), param_mode, parameter_name, value)
             db.upsert_parameter_value(username = getUser(), mode = param_mode, parameter = parameter_name, value = value)
 
-    def increment_counter(self,value_var1,max_val,param,param_increment):
+    def increment_counter(value_var1,max_val,param,param_increment):
         current_value1 = value_var1.get()
         print("current value:", current_value1)
         #print("max_val:",max_val)
@@ -35,7 +35,7 @@ class ParameterProcess:
             print("decrementing:",new_value_increment)
         value_var1.set(new_value_increment)
 
-    def decrement_counter(self,value_var2,min_val,param2,param_increment2):
+    def decrement_counter(value_var2,min_val,param2,param_increment2):
         current_value2 = value_var2.get()
         if((param2 == "Lower Rate Limit") and (50<=current_value2<90)):
             increment_val = 1
@@ -49,9 +49,15 @@ class ParameterProcess:
             new_value_decrement = round(current_value2,1)
         value_var2.set(new_value_decrement)
     
+    def save_parameters(param_tup,mode):
+        # Save all processed parameters
+        parameters_to_save = [(param_name, value_var) for param_name, value_var in param_tup]
+        ParameterProcess.process_parameter(parameters_to_save, mode)
+        print("Parameters saved.")
+
+    
 
 class AOO(ParameterProcess,tk.Frame):
-    
     def __init__(self,parent):
         super().__init__(parent)
         
@@ -99,7 +105,7 @@ class AOO(ParameterProcess,tk.Frame):
             
 
             label = tk.Label(self, text=f" {param[1]}", font=('Arial', 12))
-            label.grid(row=row, column=0, sticky="w", padx=(0, 0))
+            label.grid(row=row, column=0, sticky="w", padx=(10, 10))
     
             parameters_increment.append(parameters[i][6])
             parameters_max.append(parameters[i][5])
@@ -107,21 +113,30 @@ class AOO(ParameterProcess,tk.Frame):
             self.increment_button = tk.Button(self, text="+", command = lambda v =value, i = i: self.increment_counter(v, parameters_max[i],self.parameter_tuples[i][0],parameters_increment[i]))
             self.increment_button.grid(row=row, column=0, padx=(100, 0)) 
 
-            num = tk.Label(self, textvariable=value, font=('Arial', 16))
+            value_str=tk.StringVar()
+            value_str.set(value.get())
+
+            num = tk.Label(self, textvariable=value_str, font=('Arial', 17))
             num.grid(row=row, column=0, padx=(20, 20))   # Adjusted column for the label
 
         
             parameters_min.append(parameters[i][4])
-            self.decrement_button = tk.Button(self, text="-", command = lambda v = value, i = i,mode="AOO",j=i: self.decrement_counter(v, parameters_min[i],mode,parameters_increment[j]))
-            self.decrement_button.grid(row=row, column=0, padx=(0, 100)) 
+            self.decrement_button = tk.Button(self, text="-", command=lambda v=value, i=i, mode="AOO", j=i: ParameterProcess.decrement_counter(v, parameters_min[i], mode, parameters_increment[j]))
+            self.decrement_button.grid(row=row, column=0, padx=(0, 200)) 
             # Add a button for each parameter
             process_button = tk.Button(self, text=f"Process", command=lambda p=param[1], v=value,m="AOO": ParameterProcess.process_parameter([(p,v)],m))
+            
             process_button.grid(row=row, column=0,padx=(300, 50))  # Place the button in a separate column
+            #print("self parameter tuplesss", self.parameter_tuples)
+            #print("saved valyh", saved_value)
+
+           #SerialCommunication.set_parameters(MODE =1, LRL=saved_value[3][3],URL = saved_value[2][3],ATR_AMP= saved_value[0][3],ATR_PW=saved_value[1][3])
             row += 1
             i+=1
         
-        save_button = tk.Button(self, text="Save", command=self.save_parameters)
+        save_button = tk.Button(self, text="Save", command=lambda pt=self.parameter_tuples, mode="AOO": ParameterProcess.save_parameters(pt, mode))
         save_button.grid(row=row, column=0, padx=(300, 50), pady=(20, 0))
+        #SerialCommunication.set_parameters(MODE =1, LRL=saved_value[3][3],URL = saved_value[2][3],ATR_AMP= saved_value[0][3],ATR_PW=saved_value[1][3])
 
         tk.Label(self, text="Device:", font=('Arial', 10)).grid(row=30, column=0, padx=(0, 550), pady=(140, 0))
         tk.Label(self, text="[Show status + Device ID]", font=('Arial', 9)).grid(row=31, column=0, padx=(0, 450), pady=(0, 0))
