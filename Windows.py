@@ -90,10 +90,6 @@ class MainWindow():
         self.master.config(menu = self.menubar)
 
         
-
-
-        
-
 class Home(tk.Frame):
     """The Home class is the frame which welcomes the user after signing in, providing numerous options for the user."""
     def __init__(self, parent):
