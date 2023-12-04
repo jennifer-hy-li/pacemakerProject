@@ -262,6 +262,18 @@ class PacemakerDatabase():
         finally:
             self.close_connection()
 
+    def load_param_value_pairs(self, username: str, mode: str):
+        try:
+            self.make_connection()
+            self.cursor.execute(f"SELECT  parameter, value\
+                                  FROM    accountparameters\
+                                  WHERE   username = '{username}' and mode = '{mode}';")
+        except (Exception, psycopg2.Error) as error :
+            print ("PostgreSQL error:", error)
+        finally:
+            self.close_connection()
+
+
     def upsert_parameter_value(self, username: str, mode: str, parameter: str, value: float):
         """Update or insert a single parameter's value, for a given user, mode, and parameter.
         Note: If the primary key already exists, the value will be updated for the corresponding row.

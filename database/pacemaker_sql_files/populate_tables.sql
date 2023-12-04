@@ -118,7 +118,4 @@ INSERT INTO modeparameters VALUES ('VVIR', 'Response Factor',69,  8, 1, 16, 8);
 INSERT INTO modeparameters VALUES ('VVIR', 'Recovery Time',70,  5, 2, 16, 1);
 
 
-INSERT INTO accountparameters
-VALUES ('123', 'AOO', 'Upper Rate Limit', '200')
-ON CONFLICT (username, parameter, mode)
-DO UPDATE SET value = '200';
+
