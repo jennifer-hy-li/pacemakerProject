@@ -3,7 +3,6 @@ from datetime import *
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import SerialCommunication as sc
-import threading
 
 class egram():
 
@@ -23,12 +22,6 @@ class egram():
     def animate_signal_helper(self, i, signal_index: int):
         # Read pacemaker signals
         signals = sc.read()
-
-        # close the animation if the serial port is closed
-        # or if the user closes the window.
-        # if signals == None or self.fig.get_axis():
-        #     plt.close()
-        #     return
 
         signal = signals[signal_index]
 
