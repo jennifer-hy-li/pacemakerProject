@@ -30,7 +30,6 @@ class Mode():
         """Formats the parameter tuples for each Mode in 
         the format (parameter name, parameter value)."""
         parameters = []
-
         if len(self.mode_parameters) == len(self.account_parameters) and len(self.account_parameters) != 0:
             for param in self.account_parameters:
                 parameters.append(param)
@@ -43,8 +42,9 @@ class Mode():
                 print((tuple[1], tuple[3]))
                 parameters.append((tuple[1], tuple[3])) # (parameter name, default value)
             else:
-                print((tuple[1], [p[1] for p in self.account_parameters if p[0] == tuple[0]][0]))
-                parameters.append((tuple[1], [p[1] for p in self.account_parameters if p[0] == tuple[0]][0]))
+                print(tuple[1], self.account_parameters)
+                value = [p[1] for p in self.account_parameters if p[0] == tuple[1]][0]
+                parameters.append((tuple[1], value))
             self.min_list.append(tuple[4])
             self.max_list.append(tuple[5])
             self.increment_list.append(tuple[6])
@@ -119,7 +119,6 @@ class ParameterProcess:
         print(parameters_to_save)
         ParameterProcess.process_parameter(parameters_to_save, mode)
         print("Parameters saved.")
-
 
 
 class ProcessMode(tk.Frame, ParameterProcess):
