@@ -140,21 +140,21 @@ class Home(tk.Frame):
         """Auxiliary function for the options pane to change the frame to the submitted option."""
         print(selected_mode)
         if   selected_mode == "AOO":
-            AOO(parent)
+            ProcessMode(parent, AOO())
         elif selected_mode == "VOO":
-            VOO(parent)
+            ProcessMode(parent, VOO())
         elif selected_mode == "AAI":
-            AAI(parent)
+            ProcessMode(parent, AAI())
         elif selected_mode == "VVI":
-            VVI(parent)
+            ProcessMode(parent, VVI())
         elif selected_mode == "AOOR":
-            AOOR(parent)
+            ProcessMode(parent, AOOR())
         elif selected_mode == "VOOR":
-            VOOR(parent)
+            ProcessMode(parent, VOOR())
         elif selected_mode == "AAIR":
-            AAIR(parent)
+            ProcessMode(parent, AAIR())
         elif selected_mode == "VVIR":
-            VVIR(parent)
+            ProcessMode(parent, VVIR())
         
 
 class SignIn(tk.Frame):

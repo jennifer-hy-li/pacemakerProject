@@ -1,6 +1,5 @@
 
 connection_status=0
-
 class indicateConnection():
     def __init__(self, Color,connectionLabel):        
         self.Color=Color
@@ -13,7 +12,6 @@ class indicateConnection():
         else:
             self.connectionLabel="Pacemaker Disconnected"
             self.Color="red"
-
 def set_global_connection_status(status):
     global connection_status
     connection_status = status
