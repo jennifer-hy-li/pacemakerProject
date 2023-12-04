@@ -268,6 +268,7 @@ class PacemakerDatabase():
             self.cursor.execute(f"SELECT  parameter, value\
                                   FROM    accountparameters\
                                   WHERE   username = '{username}' and mode = '{mode}';")
+            return self.cursor.fetchall()
         except (Exception, psycopg2.Error) as error :
             print ("PostgreSQL error:", error)
         finally:
@@ -363,7 +364,7 @@ class PacemakerDatabase():
         """Get all parameters for a specific mode."""
         try:
             self.make_connection()
-            self.cursor.execute(f"SELECT parameter, value FROM modeparameters WHERE mode = '{mode}';")
+            self.cursor.execute(f"SELECT parameter, defaultvalue FROM modeparameters WHERE mode = '{mode}';")
             return self.cursor.fetchall()
         except (Exception, psycopg2.Error) as error:
             print("PostgreSQL error:", error)

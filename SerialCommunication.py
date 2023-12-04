@@ -24,79 +24,27 @@ def set_parameters(RECEIVE = False, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 2
     """Sets the parameters for the pacemaker"""
     STANDARD: int = 22
     GIVE_PARAMS: int = 34 if RECEIVE else 18
-    parameters = struct.pack('<BBBHHHffHHHffHHHHHd', STANDARD, GIVE_PARAMS, MODE, LRL, URL, 
-                             ARP_DELAY, ATR_AMP, VENT_AMP, VRP_DELAY, ATR_PW, VENT_PW,
-                             ATR_SENSE, VENT_SENSE, VARP, MAX_SR, REACT_TIME, RESP_FACTOR,
-                             REC_TIME, ACTIVITY_THRES)
+    parameters = struct.pack('<BBBHHHffHHHffHHHHHd', STANDARD, GIVE_PARAMS, MODE, 
+                             int(LRL), int(URL), int(ARP_DELAY), float(ATR_AMP), float(VENT_AMP),
+                             int(VRP_DELAY), int(ATR_PW), int(VENT_PW), float(ATR_SENSE), 
+                             float(VENT_SENSE), int(VARP), int(MAX_SR), int(REACT_TIME), 
+                             int(RESP_FACTOR), int(REC_TIME), int(ACTIVITY_THRES)) # 16 variables
     return parameters
 
+def get_parameter_map():
+    """Returns a dictionary of the parameter 
+    names to the short hand notation"""
+    return {'MODE': 'MODE', 'Lower Rate Limit': 'LRL', 'Upper Rate Limit': 'URL',
+            'ARP' : 'ARP_DELAY', 'Atrial Amplitude': 'ATR_AMP', 'Ventricular Amplitude': 'VENT_AMP',
+            'VRP': 'VRP_DELAY', 'Atrial Pulse Width': 'ATR_PW', 'Ventricular Pulse Width': 'VENT_PW',
+            'Atrial Sensitivity': 'ATR_SENSE', 'Ventricular Sensitivity': 'VENT_SENSE',
+            'VRP': 'VARP', 'Maximum Sensor Rate': 'MAX_SR', 'Reaction Time': 'REACT_TIME',
+            'Response Factor': 'RESP_FACTOR', 'Recovery Time': 'REC_TIME', 'Activity Threshold': 'ACTIVITY_THRES'}
+
+def get_mode_number(mode):
+    """Returns the mode number given the mode name"""
+    return {'AOO': 1, 'AAI': 2, 'VOO': 3, 'VVI': 4, 
+            'AOOR': 5, 'AAIR': 6, 'VOOR': 7, 'VVIR': 8}[mode]
+
 if __name__ == '__main__':
-    # print(struct.unpack('<BBBHHHffHHHffHHHHHd', ))
-    # set_parameters(MODE = 1, LRL = 60, URL = 120, ATR_AMP = 200, ATR_PW = 10)
     write(set_parameters(RECEIVE = False, MODE = 3))
-
-    # parameters pack translation:
-    # uint8 = B
-    # uint16 = H
-    # single = f
-    # double = d
-
-# MODE == 1 -> AOO
-# MODE == 2 -> AII
-# MODE == 3 -> VOO
-# MODE == 4 -> VII
-# MODE == 5 -> AOOR
-# MODE == 6 -> AIIR
-# MODE == 7 -> VOOR
-# MODE == 8 -> VIIR
-
-
-# Using the parameters pack translation, translate following:
-
-# MODE = typecast(Rx(3),'uint8');
-# LRL = typecast(Rx(4:5),'uint16');
-# URL =typecast(Rx(6:7),'uint16');
-# ARP_DELAY  = typecast(Rx(8:9),'uint16');
-# ATR_AMP = typecast(Rx(10:13),'single');
-# VENT_AMP= typecast(Rx(14:17),'single');
-# VRP_DELAY= typecast(Rx(18:19),'uint16');
-# ATR_PW= typecast(Rx(20:21),'uint16');
-# VENT_PW = typecast(Rx(22:23),'uint16');
-# ATR_SENSE = typecast(Rx(24:27), 'single');
-# VENT_SENSE = typecast(Rx(28:31), 'single');
-# PVARP = typecast(Rx(32:33), 'uint16');
-# MAX_SR = typecast(Rx(34:35), 'uint16');
-# REACT_TIME = typecast(Rx(36:37),'uint16');
-# RESP_FACTOR =  typecast(Rx(38:39),'uint16');
-# REC_TIME =  typecast(Rx(40:41),'uint16');
-# ACTIVITY_THRES =  typecast(Rx(42:49),'double');
-
-# '<BHHHffHHHffHHHHHd'
-# sum the bytes used:
-# 1 + 2 + 2 + 2 + 4 + 4 + 2 + 2 + 2 + 4 + 4 + 2 + 2 + 2 + 2 + 2 + 8 = 49 bytes
-
-
-# For receiving data, use the following:
-# LRL = typecast(Rx(4:5),'uint16'); H
-# URL =typecast(Rx(6:7),'uint16'); H
-# MODE = typecast(Rx(3),'uint8'); B
-# ARP_DELAY  = typecast(Rx(8:9),'uint16'); H
-# ATR_PW= typecast(Rx(20:21),'uint16'); H
-# VENT_PW = typecast(Rx(22:23),'uint16'); H
-# ATR_AMP = typecast(Rx(10:13),'single'); f
-# VENT_AMP= typecast(Rx(14:17),'single'); f
-# VRP_DELAY= typecast(Rx(18:19),'uint16'); H
-# PVARP = typecast(Rx(32:33), 'uint16'); H
-# MAX_SR = typecast(Rx(34:35), 'uint16'); H
-# REACT_TIME = typecast(Rx(36:37),'uint16'); H
-# RESP_FACTOR =  typecast(Rx(38:39),'uint16'); H
-# REC_TIME =  typecast(Rx(40:41),'uint16'); H
-# ATR_SENSE = typecast(Rx(24:27), 'single'); f
-# VENT_SENSE = typecast(Rx(28:31), 'single'); f
-# ACTIVITY_THRES =  typecast(Rx(42:49),'double'); d
-# ATR_SIGNAL = typecast(Rx(50:57),'double'); d
-# VENT_SIGNAL = typecast(Rx(58:65),'double'); d
-
-# '<HHBHHHffHHHHHHffddd'
-# sum the bytes used:
-# 2 + 2 + 1 + 2 + 2 + 2 + 4 + 4 + 2 + 2 + 2 + 2 + 2 + 2 + 2 + 2 + 4 + 4 + 4 + 8 + 8 = 63 bytes
