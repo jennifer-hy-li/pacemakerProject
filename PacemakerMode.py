@@ -7,13 +7,9 @@ db = PacemakerDatabase.get_instance()
 class ParameterProcess:
     def process_parameter(parameters,param_mode:str):
         for parameter_name, value_var in parameters:
-            # Retrieve the input value for the specified parameter
             value = value_var.get()
-            # Process the value (replace this with your processing logic)
-            print(f"Processing {parameter_name}: {value}")
             # Serial communication goes here.
             # Write to pacemaker the parameters
-            print(getUser(), param_mode, parameter_name, value)
             db.upsert_parameter_value(username = getUser(), mode = param_mode, parameter = parameter_name, value = value)
 
     def increment_counter(self,value_var1,max_val,param,param_increment):
@@ -57,13 +53,13 @@ class ParameterProcess:
         print("Parameters saved.")
 
 class Mode():
-    def __init__(self, name, subtitle, parameters):
-        self.name = name
+    def __init__(self, mode, subtitle, parameters):
+        self.mode = mode
         self.subtitle = subtitle
         self.parameters = parameters
 
-    def get_name(self):
-        return self.name
+    def get_mode(self):
+        return self.mode
     
     def get_subtitle(self):
         return self.subtitle
@@ -74,7 +70,7 @@ class Mode():
 class ProcessMode(tk.Frame, ParameterProcess):
     def __init__(self, parent: tk.Frame, mode: Mode):
         super().__init__(parent)
-        self.mode: str = mode.get_name()
+        self.mode: str = mode.get_mode()
         self.subtitle: str = mode.get_subtitle()
         self.parameters: list = mode.get_parameters()
         self.set_display()
@@ -158,51 +154,65 @@ class ProcessMode(tk.Frame, ParameterProcess):
     def get_parameters(self):
         return db.get_parameters(mode = self.mode)
     
+    def format_parameter_tuples(self):
+        """Retreives saved account parameters, and for any 
+        missing, uses the default value from the database."""
+        db.get_param_value_pairs(username = getUser(), mode = self.mode)
+    
 
 class AOO(Mode):
     def __init__(self):
-        Mode.__init__(self, name="AOO", 
+        Mode.__init__(self, mode="AOO", 
                         subtitle="Atrium Paced | No chamber sensed | No response to sensing ", 
                         parameters=db.get_parameters(mode = "AOO"))
         
+    def format_parameter_tuples(self):
+        accountparameters = db.load_param_value_pairs()
+        modeparameters = db.get_parameters(mode = self.mode)
+
+    
+    def format_serial_communication(self):
+        """Formats the serial communication for the AOO mode."""
+        # sc.set_parameters(mode = 1, LRL = )
+        
 class VOO(Mode):
     def __init__(self):
-        Mode.__init__(self, name="VOO", 
+        Mode.__init__(self, mode="VOO", 
                         subtitle="Ventricle Paced | No chamber sensed | No response to sensing ", 
                         parameters=db.get_parameters(mode = "VOO"))
         
 class AAI(Mode):
     def __init__(self):
-        Mode.__init__(self, name="AAI", 
+        Mode.__init__(self, mode="AAI", 
                         subtitle="Atrium Paced | Atrium Sensed | Inhibited response to sensing ", 
                         parameters=db.get_parameters(mode = "AAI"))
 
 class VVI(Mode):
     def __init__(self):
-        Mode.__init__(self, name="VVI", 
+        Mode.__init__(self, mode="VVI", 
                         subtitle="Ventricle Paced | Ventricle Sensed | Inhibited response to sensing ", 
                         parameters=db.get_parameters(mode = "VVI"))
 
 class AOOR(Mode):
     def __init__(self):
-        Mode.__init__(self, name="AOOR", 
+        Mode.__init__(self, mode="AOOR", 
                         subtitle="Atrium Paced | No chamber sensed | Rate response to activity ", 
                         parameters=db.get_parameters(mode = "AOOR"))
 
 class VOOR(Mode):
     def __init__(self):
-        Mode.__init__(self, name="VOOR", 
+        Mode.__init__(self, mode="VOOR", 
                         subtitle="Ventricle Paced | No chamber sensed | Rate response to activity ", 
                         parameters=db.get_parameters(mode = "VOOR"))
 
 class AAIR(Mode):
     def __init__(self):
-        Mode.__init__(self, name="AAIR", 
+        Mode.__init__(self, mode="AAIR", 
                         subtitle="Atrium Paced | Atrium Sensed | Rate response to activity ", 
                         parameters=db.get_parameters(mode = "AAIR"))
         
 class VVIR(Mode):
     def __init__(self):
-        Mode.__init__(self, name="VVIR", 
+        Mode.__init__(self, mode="VVIR", 
                         subtitle="Ventricle Paced | Ventricle Sensed | Rate response to activity ", 
                         parameters=db.get_parameters(mode = "VVIR"))
