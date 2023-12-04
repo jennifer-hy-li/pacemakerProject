@@ -70,15 +70,6 @@ class egram():
     
     def stop_animation(self):
         self.ani.event_source.pause()
-
-    def animate_signals(self, i):
-        """Animates both atrium and ventricle signals in subplots,
-        with the atrium on top and the ventricle on the bottom"""
-        fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
-        self.ax1 = ax1
-        self.ax2 = ax2
-        self.animate_atr(i)
-        self.animate_vent(i)
         
         
 if __name__ == '__main__':
