@@ -1,6 +1,4 @@
 import tkinter as tk
-import future_utility.UtilityFunctions as util
-import future_utility.PrintedReports as reports
 from egram import *
 from account.LoginPage import *
 from PacemakerMode import *
@@ -56,7 +54,7 @@ class MainWindow():
         update_function()
 
     def add_menubar(self):
-        """Adds the menubar to the master frame. This provides options such as File, Settings, and Reports menus."""
+        """Adds the menubar to the master frame. This provides options such as File, and Reports menus."""
         self.menubar = tk.Menu(self.master)
         self.master.config(menu = self.menubar)
 
@@ -66,11 +64,6 @@ class MainWindow():
         self.file_menu.add_cascade(label = "Home", command = lambda: (destroy_all_widgets(self.mainframe), Home(self.mainframe)))
         self.file_menu.add_command(label = "Sign Out", command = lambda: sign_out(self.mainframe))
         self.file_menu.add_command(label = "Quit", command = exit)
-
-        # add Settings to menubar
-        self.settings_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
-        self.menubar.add_cascade(menu = self.settings_menu, label = "Settings")
-        self.settings_menu.add_command(label = "Set Clock", command = util.set_clock)
 
         # add Reports to menubar
         self.reports_menu = tk.Menu(self.menubar, bg = "white", tearoff = 0)
