@@ -155,9 +155,12 @@ class ProcessMode(tk.Frame, ParameterProcess):
         return db.get_parameters(mode = self.mode)
     
     def format_parameter_tuples(self):
-        """Retreives saved account parameters, and for any 
-        missing, uses the default value from the database."""
-        db.get_param_value_pairs(username = getUser(), mode = self.mode)
+        accountparameters = db.load_param_value_pairs()
+        modeparameters = db.get_parameters(mode = self.mode)
+        if len(accountparameters) != len(modeparameters):
+            for param in modeparameters:
+                if param[1] not in accountparameters:
+                    accountparameters[param[1]] = param[3]
     
 
 class AOO(Mode):
@@ -165,11 +168,6 @@ class AOO(Mode):
         Mode.__init__(self, mode="AOO", 
                         subtitle="Atrium Paced | No chamber sensed | No response to sensing ", 
                         parameters=db.get_parameters(mode = "AOO"))
-        
-    def format_parameter_tuples(self):
-        accountparameters = db.load_param_value_pairs()
-        modeparameters = db.get_parameters(mode = self.mode)
-
     
     def format_serial_communication(self):
         """Formats the serial communication for the AOO mode."""
