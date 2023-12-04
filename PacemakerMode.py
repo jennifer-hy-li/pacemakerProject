@@ -39,10 +39,8 @@ class Mode():
             return parameters
         for tuple in self.mode_parameters:
             if tuple[1] not in [p[0] for p in self.account_parameters]:
-                print((tuple[1], tuple[3]))
                 parameters.append((tuple[1], tuple[3])) # (parameter name, default value)
             else:
-                print(tuple[1], self.account_parameters)
                 value = [p[1] for p in self.account_parameters if p[0] == tuple[1]][0]
                 parameters.append((tuple[1], value))
             self.min_list.append(tuple[4])
@@ -54,12 +52,9 @@ class Mode():
         """Formats the serial communication for any mode."""
         map = sc.get_parameter_map()
         serial_params = []
-        print(self.parameters)
         for param_name, param_value in self.parameters:
             if param_name in map:
                 serial_params.append((map[param_name], param_value))
-            else:
-                serial_params.append((param_name, param_value))
         return serial_params
 
     def send_params_serial(self):
@@ -75,17 +70,13 @@ class ParameterProcess:
     """Class to process the parameters."""
 
     @staticmethod
-    def process_parameter(parameters, param_mode : Mode):
+    def process_parameter(parameters, param_mode : str):
         for parameter_name, value_var in parameters:
             value = value_var.get()
-            param_mode.send_params_serial()
-            db.upsert_parameter_value(username = getUser(), mode = param_mode.mode, parameter = parameter_name, value = value)
+            db.upsert_parameter_value(username = getUser(), mode = param_mode, parameter = parameter_name, value = value)
 
     def increment_counter(self,value_var1,max_val,param,param_increment):
         current_value1 = value_var1.get()
-        print("current value:", current_value1)
-        #print("max_val:",max_val)
-        print(param)
         if((param == "Lower Rate Limit") and (50<=current_value1<90)):
             increment_val = 1
         else:
@@ -93,7 +84,6 @@ class ParameterProcess:
 
         if current_value1 < max_val:
             new_value_increment =  round(current_value1 + increment_val,1) # query from database
-            #print("incrementing",new_value_increment)
         else:
             messagebox.showinfo('Inavlid', 'Trying to go outside of range')
             new_value_increment =  round(current_value1,1)
@@ -116,9 +106,7 @@ class ParameterProcess:
     def save_parameters(self, param_tuple, mode: Mode):
         # Save all processed parameters
         parameters_to_save = [(param_name, value_var) for param_name, value_var in param_tuple]
-        print(parameters_to_save)
         ParameterProcess.process_parameter(parameters_to_save, mode)
-        print("Parameters saved.")
 
 
 class ProcessMode(tk.Frame, ParameterProcess):
@@ -128,7 +116,6 @@ class ProcessMode(tk.Frame, ParameterProcess):
         self.mode: str = mode.get_mode()
         self.subtitle: str = mode.get_subtitle()
         self.parameters: list = mode.get_parameters()
-        print("parameters", self.parameters)
         self.set_display()
 
     def set_display(self):
@@ -169,13 +156,16 @@ class ProcessMode(tk.Frame, ParameterProcess):
             parameter_value.grid(row=row, column=0, padx=(20, 20))   # Adjusted column for the label
             
             # Process button
-            process_button = tk.Button(self, text=f"Process", command=lambda p=param_name, v=value, m=self.mode_object: ParameterProcess.process_parameter([(p,v)],m))
+            process_button = tk.Button(self, text=f"Process", command=lambda p=param_name, v=value, 
+                                       m=self.mode: (self.mode_object.send_params_serial,
+                                                            ParameterProcess.process_parameter([(p,v)],m)))
             process_button.grid(row=row, column=0,padx=(300, 50))
 
             row+=1; i+=1
 
         # Save button
-        save_button = tk.Button(self, text="Save", command = lambda p=self.parameter_tuples, m=self.mode_object: self.save_parameters(p, m))
+        save_button = tk.Button(self, text="Save", command = lambda p=self.parameter_tuples, 
+                                m=self.mode: (self.mode_object.send_params_serial(), self.save_parameters(p, m)))
         save_button.grid(row=row, column=0, padx=(300, 50), pady=(20, 0))
 
         # Device label
