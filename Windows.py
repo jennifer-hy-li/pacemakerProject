@@ -1,9 +1,11 @@
+# Authors: Jayden Hooper, Jennifer Li, Angeline Segado
+
 import tkinter as tk
-from egram import *
+from Egram import *
 from account.LoginPage import *
 from PacemakerMode import *
 from database.PacemakerDatabase import *
-from SerialComIndicator import *
+from Indicator import *
 
 class MainWindow():
     """The MainWindow is responsible for holding subframes. 
@@ -21,19 +23,19 @@ class MainWindow():
 
         self.add_menubar()
 
-        indicator=indicateConnection("red","Pacemaker Disconnected")
+        indicator = indicateConnection(0)
 
          #initial display, serial com indicator
-        connection_label = tk.Label(self.master, text=indicator.connectionLabel, fg=indicator.Color)
+        connection_label = tk.Label(self.master, text=indicator.get_connection_label(), fg=indicator.get_color())
         connection_label.pack(pady=10, side=LEFT)
 
         canvas = tk.Canvas(self.master, width=20, height=20)
-        canvas.create_oval(2, 2, 18, 18, fill=indicator.Color, tags="connection_circle")
+        canvas.create_oval(2, 2, 18, 18, fill=indicator.get_color(), tags="connection_circle")
         canvas.pack(side=LEFT)
         def update():
-            connection_label.config(text=indicator.connectionLabel, fg=indicator.Color)
+            connection_label.config(text=indicator.get_connection_label(), fg=indicator.get_color())
             canvas.delete("connection_circle")
-            canvas.create_oval(2,2,18,18, fill=indicator.Color, tags="connection_circle")
+            canvas.create_oval(2,2,18,18, fill=indicator.get_color(), tags="connection_circle")
 
         # self.master.after(100, indicator.check_connection)#repeatedly checks for connection
         # self.master.after(100, update)
@@ -50,7 +52,7 @@ class MainWindow():
         self.master.after(1000, self.check_indicator, indicator, update_function)
 
         # Perform the indicator check and update
-        indicator.check_connection()
+        indicator.update_connection()
         update_function()
 
     def add_menubar(self):
@@ -161,10 +163,7 @@ class SignIn(tk.Frame):
         signInWindow.pack()
         self.pack(padx=0,pady=0)
 
-        #Loginpage(self) # self passed into Loginpage as root window
-        login_page = LoginPage(self)
-
-        
+        LoginPage(self)       
         
         Home(parent)
         

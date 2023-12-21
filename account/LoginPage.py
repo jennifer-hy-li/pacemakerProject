@@ -1,3 +1,5 @@
+# Author: Jennifer Li
+
 # login_module.py
 
 from tkinter import *

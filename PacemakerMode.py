@@ -1,3 +1,5 @@
+# Authors: Angeline Segado, Jayden Hooper
+
 import tkinter as tk
 from database.PacemakerDatabase import *
 from account.LoginPage import *

@@ -1,3 +1,5 @@
+# Author: Jennifer Li
+
 from tkinter import *
 from tkinter import messagebox
 from database.PacemakerDatabase import PacemakerDatabase

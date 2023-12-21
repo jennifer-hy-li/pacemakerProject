@@ -1,3 +1,5 @@
+-- Author: Jayden Hooper --
+
 DROP TABLE IF EXISTS accountparameters CASCADE;
 DROP TABLE IF EXISTS modeparameters CASCADE;
 DROP TABLE IF EXISTS parameters CASCADE;

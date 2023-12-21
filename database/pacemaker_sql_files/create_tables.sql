@@ -1,3 +1,5 @@
+-- Author: Jayden Hooper -- 
+
 -- ORDER 0 TABLES --
 CREATE TABLE IF NOT EXISTS Account (
     username VARCHAR (50) PRIMARY KEY,

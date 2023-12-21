@@ -1,3 +1,5 @@
+-- Author: Jayden Hooper --
+
 -- parameters inserts
 INSERT INTO parameters VALUES ('Lower Rate Limit');
 INSERT INTO parameters VALUES ('Upper Rate Limit');

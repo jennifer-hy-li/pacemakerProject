@@ -1,12 +1,18 @@
+# Author: Jayden Hooper
+
 import serial
 import struct
 
-def write(parameters, port='COM6', baudrate=115200, timeout=0):
+PORT = 'COM8'
+BAUDRATE = 115200
+TIMEOUT = 0
+
+def write(parameters, port=PORT, baudrate=BAUDRATE, timeout=TIMEOUT):
     # write an array of data
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
         print("Writing", ser.write(parameters), "bytes")        
 
-def read(port='COM6', baudrate=115200, timeout=0) -> tuple:
+def read(port=PORT, baudrate=BAUDRATE, timeout=TIMEOUT) -> tuple:
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
         ser.write(set_parameters(RECEIVE = True))
         while ser.in_waiting != 16:
@@ -47,4 +53,4 @@ def get_mode_number(mode):
             'AOOR': 5, 'AAIR': 6, 'VOOR': 7, 'VVIR': 8}[mode]
 
 if __name__ == '__main__':
-    write(set_parameters(RECEIVE = False, MODE = 3))
+    write(set_parameters(RECEIVE = False, MODE = 8))

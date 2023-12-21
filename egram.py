@@ -1,3 +1,5 @@
+# Author: Jayden Hooper
+
 from collections import deque
 from datetime import *
 import matplotlib.pyplot as plt

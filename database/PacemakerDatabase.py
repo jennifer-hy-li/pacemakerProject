@@ -1,3 +1,5 @@
+# Author: Jayden Hooper
+
 import psycopg2
 
 class PacemakerDatabase():

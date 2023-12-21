@@ -1,7 +1,9 @@
+# Author: Jayden Hooper
+
 import tkinter as tk
 from Windows import *
 from database.PacemakerDatabase import *
-from egram import *
+from Egram import *
 
 def main():
     """The main function is responsible for setting up and running the program."""

@@ -1,3 +1,5 @@
+# Author: Jayden Hooper
+
 import PacemakerDatabase as database
 import unittest
 
