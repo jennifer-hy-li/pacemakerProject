@@ -5,7 +5,7 @@ from Egram import *
 from account.LoginPage import *
 from PacemakerMode import *
 from database.PacemakerDatabase import *
-from Indicator import *
+from serial_coms.Indicator import *
 
 class MainWindow():
     """The MainWindow is responsible for holding subframes. 

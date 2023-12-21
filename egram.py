@@ -4,7 +4,7 @@ from collections import deque
 from datetime import *
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import SerialCommunication as sc
+import serial_coms.SerialCommunication as sc
 
 class egram():
 

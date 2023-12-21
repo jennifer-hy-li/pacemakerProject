@@ -3,7 +3,7 @@
 import tkinter as tk
 from database.PacemakerDatabase import *
 from account.LoginPage import *
-import SerialCommunication as sc
+import serial_coms.SerialCommunication as sc
 
 db = PacemakerDatabase.get_instance()
 

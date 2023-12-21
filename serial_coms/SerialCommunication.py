@@ -2,17 +2,20 @@
 
 import serial
 import struct
+from Indicator import indicateConnection
 
 PORT = 'COM8'
 BAUDRATE = 115200
 TIMEOUT = 0
 
 def write(parameters, port=PORT, baudrate=BAUDRATE, timeout=TIMEOUT):
+    """Writes the parameters to the pacemaker.""" 
     # write an array of data
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
         print("Writing", ser.write(parameters), "bytes")        
 
 def read(port=PORT, baudrate=BAUDRATE, timeout=TIMEOUT) -> tuple:
+    """Reads the egram data from the pacemaker"""
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
         ser.write(set_parameters(RECEIVE = True))
         while ser.in_waiting != 16:
