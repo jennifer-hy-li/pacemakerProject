@@ -2,7 +2,8 @@
 
 import serial
 import struct
-from Indicator import indicateConnection
+import time
+from serial_coms.ComsIndicator import *
 
 PORT = 'COM8'
 BAUDRATE = 115200
@@ -12,16 +13,21 @@ def write(parameters, port=PORT, baudrate=BAUDRATE, timeout=TIMEOUT):
     """Writes the parameters to the pacemaker.""" 
     # write an array of data
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
-        print("Writing", ser.write(parameters), "bytes")        
+        Indicator.get_instance().set_connection_status(True)
+        time.sleep(0.3)
+        print("Writing", ser.write(parameters), "bytes")
+        Indicator.get_instance().set_connection_status(False)        
 
 def read(port=PORT, baudrate=BAUDRATE, timeout=TIMEOUT) -> tuple:
     """Reads the egram data from the pacemaker"""
     with serial.Serial(port, baudrate, timeout=timeout) as ser:
+        Indicator.get_instance().set_connection_status(True)
         ser.write(set_parameters(RECEIVE = True))
         while ser.in_waiting != 16:
             continue
         read_data = ser.read(ser.in_waiting)
         unpacked_signals = struct.unpack('<dd', read_data)
+        Indicator.get_instance().set_connection_status(False)
         return unpacked_signals
 
 def set_parameters(RECEIVE = False, MODE = 3, LRL = 60, URL = 120, ARP_DELAY = 200, 

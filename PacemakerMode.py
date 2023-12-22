@@ -77,7 +77,7 @@ class ParameterProcess:
             value = value_var.get()
             db.upsert_parameter_value(username = getUser(), mode = param_mode, parameter = parameter_name, value = value)
 
-    def increment_counter(self,value_var1,max_val,param,param_increment):
+    def increment_counter(self, value_var1, max_val, param,param_increment):
         current_value1 = value_var1.get()
         if((param == "Lower Rate Limit") and (50<=current_value1<90)):
             increment_val = 1
@@ -101,14 +101,14 @@ class ParameterProcess:
         if current_value2>min_val:
             new_value_decrement =  round(current_value2 - increment_val,1)
         else:
-            messagebox.showinfo('Inavlid', 'Trying to go outside of range')
+            messagebox.showinfo('Invalid', 'Trying to go outside of range')
             new_value_decrement = round(current_value2,1)
         value_var2.set(new_value_decrement)
     
     def save_parameters(self, param_tuple, mode: Mode):
         # Save all processed parameters
-        parameters_to_save = [(param_name, value_var) for param_name, value_var in param_tuple]
-        ParameterProcess.process_parameter(parameters_to_save, mode)
+        parameters = [(param_name, value_var) for param_name, value_var in param_tuple]
+        ParameterProcess.process_parameter(parameters, mode)
 
 
 class ProcessMode(tk.Frame, ParameterProcess):
@@ -159,7 +159,7 @@ class ProcessMode(tk.Frame, ParameterProcess):
             
             # Process button
             process_button = tk.Button(self, text=f"Process", command=lambda p=param_name, v=value, 
-                                       m=self.mode: (self.mode_object.send_params_serial,
+                                       m=self.mode: (self.mode_object.send_params_serial(),
                                                             ParameterProcess.process_parameter([(p,v)],m)))
             process_button.grid(row=row, column=0,padx=(300, 50))
 

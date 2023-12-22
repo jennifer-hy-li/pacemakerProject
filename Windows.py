@@ -5,9 +5,9 @@ from Egram import *
 from account.LoginPage import *
 from PacemakerMode import *
 from database.PacemakerDatabase import *
-from serial_coms.Indicator import *
+from serial_coms.ComsIndicator import *
 
-class MainWindow():
+class MainWindow(Subscriber):
     """The MainWindow is responsible for holding subframes. 
     This class allows frames to be created and destroyed, 
     while still being held in the same space."""
@@ -20,40 +20,23 @@ class MainWindow():
         master.title("Pacemaker v0 0.1.0")
 
         self.e = egram()
-
         self.add_menubar()
-
-        indicator = indicateConnection(0)
-
-         #initial display, serial com indicator
-        connection_label = tk.Label(self.master, text=indicator.get_connection_label(), fg=indicator.get_color())
-        connection_label.pack(pady=10, side=LEFT)
-
-        canvas = tk.Canvas(self.master, width=20, height=20)
-        canvas.create_oval(2, 2, 18, 18, fill=indicator.get_color(), tags="connection_circle")
-        canvas.pack(side=LEFT)
-        def update():
-            connection_label.config(text=indicator.get_connection_label(), fg=indicator.get_color())
-            canvas.delete("connection_circle")
-            canvas.create_oval(2,2,18,18, fill=indicator.get_color(), tags="connection_circle")
-
-        # self.master.after(100, indicator.check_connection)#repeatedly checks for connection
-        # self.master.after(100, update)
-
-        # set_global_connection_status(1)
-        # Set up periodic check for the indicator
-        self.check_indicator(indicator, update)
-
+        self.init_indicator()
+        
         # Initial frame
         SignIn(mainframe)
+    
+    def init_indicator(self):
+        self.indicator = Indicator.get_instance()
+        self.indicator.subscribe(self)
 
-    def check_indicator(self, indicator, update_function):
-        # Check the indicator every 1000 milliseconds (1 second)
-        self.master.after(1000, self.check_indicator, indicator, update_function)
+        # Initial display, serial com indicator
+        self.connection_label = tk.Label(self.master, text=self.indicator.get_connection_label(), fg=self.indicator.get_color())
+        self.connection_label.pack(pady=10, side=LEFT)
 
-        # Perform the indicator check and update
-        indicator.update_connection()
-        update_function()
+        self.indicator_canvas = tk.Canvas(self.master, width=20, height=20)
+        self.indicator_canvas.create_oval(2, 2, 18, 18, fill=self.indicator.get_color(), tags="connection_circle")
+        self.indicator_canvas.pack(side=LEFT)
 
     def add_menubar(self):
         """Adds the menubar to the master frame. This provides options such as File, and Reports menus."""
@@ -74,7 +57,6 @@ class MainWindow():
         self.reports_menu.add_command(label = "Atrium Electrogram", command = lambda: self.e.display_atr_egram())
         self.reports_menu.add_command(label = "Ventricle Electrogram", command = lambda: self.e.display_vent_egram())
 
-
     def hide_menubar(self):
         """Hides the menubar on the master frame. 
         Use when it doesn't make sense to have a menubar for a particular frame."""
@@ -83,6 +65,14 @@ class MainWindow():
     def show_menubar(self):
         """Shows the menubar on the master frame."""
         self.master.config(menu = self.menubar)
+
+    def update_indicator(self):
+        """Updates the serial communication indicator."""
+        self.connection_label.config(text=self.indicator.get_connection_label(), fg=self.indicator.get_color())
+        self.indicator_canvas.delete("connection_circle")
+        self.indicator_canvas.create_oval(2,2,18,18, fill=self.indicator.get_color(), tags="connection_circle")
+        # self.master.update_idletasks()
+        self.master.update()
 
         
 class Home(tk.Frame):
@@ -168,7 +158,6 @@ class SignIn(tk.Frame):
         Home(parent)
         
             
-
 # --------- Helper functions ---------- #
 
 def sign_out(parent):
