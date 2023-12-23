@@ -1,4 +1,4 @@
-# Pacemaker Program with Simulink and Python Project
+# Pacemaker Program with Simulink and Python
 
 ## Functional Pacemaker Program Description
 The logic of the program was built using model-driven development and flashed to the FRDM-K64FJ board using Simulink. Python was used to create the interface between the user and board. Python communicates with a local PostgreSQL database to store user and pacemaker data. ER diagrams have been created to communicate the structure of the PostgreSQL database.
